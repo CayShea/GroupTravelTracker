@@ -13,12 +13,15 @@ import { useHistory, useLocation } from 'react-router-dom';
 
 import * as actions from '../store/authActions';
 import useStyles from '../style';
+import ConfirmEmailModel from '../components/modals/ConfirmEmailModal';
 
 
 function SignUp(props) {
   const classes = useStyles();
   const [email, setEmail] = React.useState(null);
   const [password, setPassword] = React.useState(null);
+  const [open, setOpen] = React.useState(false);
+
   let history = useHistory();
   let location = useLocation();
   let { from } = location.state || { from: { pathname: "/" } }
@@ -33,12 +36,18 @@ function SignUp(props) {
       case 'password': setPassword(event.target.value); break;
       default: return null;
     }
- }
+ };
 
  const handleSubmit = (e) => {
   e.preventDefault();
   props.onAuth(email, password);
- }
+  setOpen(true);
+ };
+
+ const handleClose = () => {
+  setOpen(false);
+  window.location.reload();
+ };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -114,6 +123,9 @@ function SignUp(props) {
             </Grid>
           </Grid>
         </form>
+        <div>
+          <ConfirmEmailModel open={open} handleClose={handleClose}/>
+        </div>
       </div>
     </Container>
   );
