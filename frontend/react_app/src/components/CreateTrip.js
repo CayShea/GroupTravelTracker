@@ -16,8 +16,8 @@ import { startOfToday } from 'date-fns'
 import Grid from '@material-ui/core/Grid';
 
 import BasicDatePicker from '../components/BasicDatePicker';
-import { API_SERVER } from '../settings.js';
 import useStyles from '../style';
+import api from '../api';
 
 export default function CreateTrip(props) {
   const classes = useStyles();
@@ -56,16 +56,12 @@ export default function CreateTrip(props) {
   const handleCreateTrip = (e) => {
       e.preventDefault();
       createTrip();
-  }
+  };
 
-  const request = new Request(`${API_SERVER}/api/trips/`, {
-    method: 'POST',
-    headers: props.header,
-    body: JSON.stringify(values)
-  })
+  
   async function createTrip() {
       try {
-        const res = await fetch(request);
+        const res = await fetch(api.trips.create(props.token, values));
         res.json()
         .then(() => {
             handleClose();
