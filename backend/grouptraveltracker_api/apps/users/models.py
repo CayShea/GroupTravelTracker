@@ -10,14 +10,12 @@ class CustomUser(AbstractUser):
     username = None
     id = models.CharField(primary_key=True, max_length=255, default=shortuuid.uuid, db_index=True)
     email = models.EmailField(_('email address'), unique=True)
+    display_name = models.CharField(blank=True, max_length=100)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
     objects = CustomUserManager()
 
-    display_name = models.CharField(blank=True, max_length=100)
-    
-
     def __str__(self):
-        return self.email
+        return self.id

@@ -4,3 +4,4 @@ class TripClassification(metaclass=ChoicesMeta):
     WORK = "work"
     PLEASURE = "pleasure"
     BOTH = "both"
+    NONE = "none"
