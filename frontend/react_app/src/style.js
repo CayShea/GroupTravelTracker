@@ -1,11 +1,12 @@
+
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
-      marginTop: theme.spacing(8),
+      marginTop: theme.spacing(1),
       display: 'flex',
       flexDirection: 'column',
-      alignItems: 'center',
+      marginBottom: theme.spacing(2),
     },
     avatar: {
       margin: theme.spacing(1),
@@ -23,6 +24,11 @@ const useStyles = makeStyles((theme) => ({
       },
     root: {
       flexGrow: 1,
+        paddingLeft: theme.spacing(1),
+        paddingRight: theme.spacing(1),
+    },
+    title: {
+      flex: '1 1 100%',
     },
   }));
 

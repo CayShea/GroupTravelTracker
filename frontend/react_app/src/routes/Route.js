@@ -22,7 +22,7 @@ export default function RouteWrapper({
   * (SignIn or SignUp) after being authenticated.    
   */   
   if (!isPrivate && signed) {     
-    return <Redirect to="/dashboard" />;   
+    return <Redirect to="/TripsList" />;   
   }
   
   /**    

@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
 import Login from "../pages/Login";
-import Dashboard from "../pages/Dashboard";
+import TripsList from "../pages/TripsList";
 import Signup from "../pages/SignUp";
 
 function PrivateRoute({ isAuthenticated, children, ...rest}) {
@@ -33,7 +33,7 @@ function Urls(props) {
                 <Switch>
                     <Route exact path="/login/"> <Login {...props} /></Route>
                     <Route exact path="/signup/"> <Signup {...props} /></Route>
-                    <PrivateRoute exact path="/" isAuthenticated={props.isAuthenticated}><Dashboard {...props}/></PrivateRoute>
+                    <PrivateRoute exact path="/" isAuthenticated={props.isAuthenticated}><TripsList {...props}/></PrivateRoute>
                 </Switch>
             </BrowserRouter>
         </div>
