@@ -2,7 +2,7 @@
 
 
 ## after git clone.
-```
+
 Frontend: 
 - npm install
 Backend: 
