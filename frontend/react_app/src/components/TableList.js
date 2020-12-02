@@ -108,7 +108,7 @@ export default function TableList(props) {
   const handleClick = (event, name) => {
     // const selectedIndex = selected.indexOf(name);
     // let newSelected = [];
-    let newSelected = name
+    let newSelected = name == selected ? '' : name
 
     // if (selectedIndex === -1) {
     //   newSelected = newSelected.concat(selected, name);
