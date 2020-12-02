@@ -20,7 +20,6 @@ class TripViewSet(RWSerializerModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        # allowed_trips = _get_user_allowed_trips(self.request)
         return Trip.objects.filter(owner_id=self.request.user.id)
 
     @swagger_auto_schema(
