@@ -11,6 +11,9 @@ Backend:
 - python manage.py migrate
 
 
+
+
+
 ## setup before
 Ensure you have Python3 installed.
 
@@ -69,4 +72,3 @@ vi ~/.bash_profile
 source ~/.bash_profile
 ```
 
-```
