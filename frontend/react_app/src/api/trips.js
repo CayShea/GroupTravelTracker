@@ -23,6 +23,16 @@ export default {
             }
         ))
     },
+    detail(token, id){
+        const header = new Headers({'Authorization': `Token ${token}`, 'Content-Type': 'application/json'});
+        return (
+            new Request(`${API_SERVER}/api/trips/${id}`,
+            {
+                method: "GET",
+                headers: header
+            }
+        ))
+    },
     delete(token, selected){
         const header = new Headers({'Authorization': `Token ${token}`, 'Content-Type': 'application/json'});
         return (

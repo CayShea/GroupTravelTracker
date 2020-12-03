@@ -14,6 +14,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import DeleteIcon from '@material-ui/icons/Delete';
+import { useHistory } from 'react-router-dom';
 
 import useStyles from '../style';
 import api from '../api';
@@ -21,7 +22,7 @@ import api from '../api';
 
 
 function EnhancedTableHead(props) {
-  const { onSelectAllClick, numSelected, rowCount } = props;
+  // const { onSelectAllClick, numSelected, rowCount } = props;
 
   return (
     <TableHead>
@@ -93,6 +94,7 @@ EnhancedTableToolbar.propTypes = {
 
 export default function TableList(props) {
   const classes = useStyles();
+  const history = useHistory();
   const [ selected, setSelected ] = useState([]);
   const  [ hasError, setErrors ] =  useState(false);
 
@@ -174,11 +176,11 @@ export default function TableList(props) {
                                         inputProps={{ 'aria-labelledby': labelId }}
                                     />
                                 </TableCell>
-                                <TableCell component="th" scope="row">{row.name}</TableCell>
+                                <TableCell component="th" scope="row" onClick={() => {history.push(`/trips/${row.id}`)}}>{row.name}</TableCell>
                                 <TableCell align="left">{row.startdate}</TableCell>
                                 <TableCell align="left">{row.start_location}</TableCell>
                                 <TableCell align="left">{row.budget}</TableCell>
-                                <TableCell align="left">{row.classification ? row.classification : '--'}</TableCell>
+                                <TableCell align="left">{row.classification == 'none' ?  '--' : row.classification}</TableCell>
                             </TableRow>
                         )})
                 ) : (

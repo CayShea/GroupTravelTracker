@@ -1,12 +1,12 @@
 import React from "react";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
-
-import Login from "../pages/Login";
-import TripsList from "../pages/TripsList";
-import Signup from "../pages/SignUp";
+import Login from '../pages/Login';
+import SignUp from '../pages/SignUp';
+import TripsList from '../pages/TripsList';
+import TripDetails from '../pages/TripDetails';
+import Layout from '../components/Layout';
 
 function PrivateRoute({ isAuthenticated, children, ...rest}) {
-    console.log("is authenticated??", isAuthenticated)
     return (
         <Route
             {...rest}
@@ -30,11 +30,15 @@ function Urls(props) {
     return (
         <div>
             <BrowserRouter>
-                <Switch>
-                    <Route exact path="/login/"> <Login {...props} /></Route>
-                    <Route exact path="/signup/"> <Signup {...props} /></Route>
-                    <PrivateRoute exact path="/" isAuthenticated={props.isAuthenticated}><TripsList {...props}/></PrivateRoute>
-                </Switch>
+                <Layout  {...props}>
+                    <Switch>
+                        <Route exact path="/login/"> <Login {...props} /></Route>
+                        <Route exact path="/signup/"> <SignUp {...props} /></Route>
+                        <PrivateRoute exact path="/trips" isAuthenticated={props.isAuthenticated}><TripsList {...props}/></PrivateRoute>
+                        <PrivateRoute exact path="/trips/:id" isAuthenticated={props.isAuthenticated}><TripDetails {...props}/></PrivateRoute>
+                        <PrivateRoute exact path="/" isAuthenticated={props.isAuthenticated}><TripsList {...props}/></PrivateRoute>
+                    </Switch>
+                </Layout>
             </BrowserRouter>
         </div>
     )

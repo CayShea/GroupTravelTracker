@@ -1,5 +1,5 @@
 import React from 'react';
-import TopBar from "./TopBar"
+import Header from "./Header"
 import Footer from "./Footer"
 import CssBaseline from '@material-ui/core/CssBaseline';
 
@@ -8,7 +8,7 @@ function Layout(props) {
     return (
         <React.Fragment>
             <CssBaseline />
-            <TopBar {...props} />
+            <Header {...props} />
                 <div>
                     {props.children}
                 </div>
