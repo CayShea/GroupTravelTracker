@@ -5,6 +5,7 @@
 
 Frontend: 
 - npm install
+
 Backend: 
 - start virtualenv
 - pip install -r requirements.txt
