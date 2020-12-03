@@ -23,11 +23,14 @@ import Link from '@material-ui/core/Link';
 import Drawer from '@material-ui/core/Drawer';
 import Paper from '@material-ui/core/Paper';
 import MenuIcon from '@material-ui/icons/Menu';
+import EditIcon from '@material-ui/icons/Edit';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import { mainListItems, secondaryListItems } from '../components/ListItem';
 import TripSummary from '../components/TripSummary';
-import Budget from '../components/Budget';
+import BudgetOverview from '../components/BudgetOverview';
+import CalendarOverview from '../components/CalendarOverview';
+import MapOverview from '../components/MapOverview';
 import Orders from '../components/Orders';
 
 
@@ -126,7 +129,6 @@ export default function TripDetails(props) {
         const res = await fetch(api.trips.detail(props.token, id));
         res.json()
         .then(res => {
-            console.log("RES.....",res)
             setTripDetails(res)
         })
         .catch(err => setErrors(err));
@@ -161,7 +163,10 @@ export default function TripDetails(props) {
             <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
                 {tripDetails.name} Trip
             </Typography>
-            <IconButton color="inherit">
+            <IconButton onClick={() => {alert("link to edit TRIP")}} color="inherit">
+                <EditIcon />
+            </IconButton>
+            <IconButton onClick={() => {alert("link to latest updates to trip by other Travelers")}} color="inherit">
               <Badge badgeContent={4} color="secondary">
                 <NotificationsIcon />
               </Badge>
@@ -189,16 +194,28 @@ export default function TripDetails(props) {
           <div className={classes.appBarSpacer} />
           <Container maxWidth="lg" className={classes.container}>
             <Grid container spacing={3}>
-              {/* TripSummary */}
-              <Grid item xs={12} md={8} lg={9}>
-                <Paper className={fixedHeightPaper}>
-                  <TripSummary trip={tripDetails}/>
-                </Paper>
-              </Grid>
-              {/* Recent Budget */}
+              {/* Calendar */}
               <Grid item xs={12} md={4} lg={3}>
                 <Paper className={fixedHeightPaper}>
-                  <Budget trip={tripDetails}/>
+                  <CalendarOverview trip={tripDetails}/>
+                </Paper>
+              </Grid>
+              {/* Map */}
+              <Grid item xs={12} md={4} lg={3}>
+                <Paper className={fixedHeightPaper}>
+                  <MapOverview trip={tripDetails}/>
+                </Paper>
+              </Grid>
+              {/* Budget */}
+              <Grid item xs={12} md={4} lg={3}>
+                <Paper className={fixedHeightPaper}>
+                  <BudgetOverview trip={tripDetails}/>
+                </Paper>
+              </Grid>
+              {/* TripSummary */}
+              <Grid item xs={12}>
+                <Paper className={fixedHeightPaper}>
+                  <TripSummary trip={tripDetails}/>
                 </Paper>
               </Grid>
               {/* Recent Orders */}

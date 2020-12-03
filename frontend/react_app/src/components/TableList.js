@@ -22,7 +22,7 @@ import api from '../api';
 
 
 function EnhancedTableHead(props) {
-  const { onSelectAllClick, numSelected, rowCount } = props;
+  // const { onSelectAllClick, numSelected, rowCount } = props;
 
   return (
     <TableHead>

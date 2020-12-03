@@ -1,6 +1,5 @@
 import React from 'react';
 import Urls from './routes/urls';
-import Layout from './components/Layout';
 import {connect} from 'react-redux';
 import * as actions from './store/authActions';
 import { StyleSheet } from 'react-native';
@@ -13,9 +12,7 @@ function App(props) {
 
   return (
     <div className="App">
-      <Layout {...props}>
-         <Urls {...props}/>
-      </Layout>
+      <Urls {...props}/>
     </div>
   );
 }

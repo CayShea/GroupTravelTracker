@@ -9,6 +9,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,8 +23,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ButtonAppBar(props) {
+export default function Header(props) {
   const classes = useStyles();
+  const history = useHistory();
   const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -41,7 +43,7 @@ export default function ButtonAppBar(props) {
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
-            Group Travel Tracker
+            <Button color="inherit" onClick={() => history.push(`/trips/`)}>Group Travel Tracker</Button>
           </Typography>
           {props.isAuthenticated ? <Button color="inherit" onClick={()=>props.logout()}>Logout</Button> : null}
         {props.isAuthenticated && (
