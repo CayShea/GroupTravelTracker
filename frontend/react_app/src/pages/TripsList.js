@@ -21,7 +21,6 @@ export default function TripsList(props) {
     const  [ hasError, setErrors ] =  useState(false);
     const  [ trips, setTrips ]= useState([]);
     const classes = useStyles();
-
    
     const headCells = [
       { id: 'name', numeric: false, disablePadding: false, label: 'Trip Name' },
