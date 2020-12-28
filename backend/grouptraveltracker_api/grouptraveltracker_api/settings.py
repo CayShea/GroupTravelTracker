@@ -50,14 +50,19 @@ REQUIRED_APPS = [
 TRAVEL_TRACKER_APPS = [
     'apps.users.apps.UsersConfig',
     'apps.trips.apps.TripsConfig',
+    'apps.trip_members.apps.TripMembersConfig',
 ]
 
 INSTALLED_APPS = TRAVEL_TRACKER_APPS + REQUIRED_APPS
 
 
 AUTH_USER_MODEL = 'users.CustomUser'
+ACCOUNT_ADAPTER = 'apps.users.adapters.CustomUserAccountAdapter'
 REST_AUTH_SERIALIZERS = {
     'USER_DETAILS_SERIALIZER': 'apps.users.serializers.UserSerializer',
+}
+REST_AUTH_REGISTER_SERIALIZERS = {
+    "REGISTER_SERIALIZER": "apps.users.serializers.CustomRegisterSerializer",
 }
 
 MIDDLEWARE = [

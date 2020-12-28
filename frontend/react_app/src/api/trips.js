@@ -33,6 +33,17 @@ export default {
             }
         ))
     },
+    edit(token, values){
+        const header = new Headers({'Authorization': `Token ${token}`, 'Content-Type': 'application/json'});
+        return (
+            new Request(`${API_SERVER}/api/trips/${values.id}`,
+            {
+                method: "PATCH",
+                headers: header,
+                body: JSON.stringify(values)
+            }
+        ))
+    },
     delete(token, selected){
         const header = new Headers({'Authorization': `Token ${token}`, 'Content-Type': 'application/json'});
         return (
