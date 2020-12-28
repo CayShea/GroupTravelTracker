@@ -5,13 +5,15 @@
 
 Frontend: 
 - npm install
+
 Backend: 
 - start virtualenv
 - pip install -r requirements.txt
 - python manage.py migrate
 
 
-
+```
+```
 
 
 ## setup before
