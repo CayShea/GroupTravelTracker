@@ -18,7 +18,9 @@ export default function TripSummary(props) {
   const classes = useStyles();
 
   const tripDetails = {
-    "Start Location": props.trip.start_location ? props.trip.start_location : '--',
+    "Location": props.trip.start_location ? props.trip.start_location : '--',
+    "Dates": props.trip.startdate ? `${props.trip.startdate} to ${props.trip.enddate}` : '--',
+    "Budget": props.trip.budget ? props.trip.budget : '--',
     "Summary": props.trip.summary ? props.trip.summary : '--',
     "Classification": props.trip.classification,
   }
@@ -30,7 +32,7 @@ export default function TripSummary(props) {
         <List dense>
           { Object.keys(tripDetails).map((key, index) => {
             return (
-              <ListItem>
+              <ListItem key={index}>
                 <ListItemIcon>
                   <ArrowForwardIosIcon />
                 </ListItemIcon>

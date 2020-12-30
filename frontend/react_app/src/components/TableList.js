@@ -14,11 +14,12 @@ import Checkbox from '@material-ui/core/Checkbox';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import DeleteIcon from '@material-ui/icons/Delete';
+import Grid from '@material-ui/core/Grid';
 import { useHistory } from 'react-router-dom';
 
 import useStyles from '../style';
+import TripForm from '../components/TripForm';
 import api from '../api';
-
 
 
 function EnhancedTableHead(props) {
@@ -32,7 +33,7 @@ function EnhancedTableHead(props) {
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
-            inputProps={{ 'aria-label': 'select all desserts' }}
+            inputProps={{ 'aria-label': 'select all trips' }}
           /> */}
         </TableCell>
         {props.headCells.map((headCell) => (
@@ -55,6 +56,9 @@ EnhancedTableHead.propTypes = {
   rowCount: PropTypes.number.isRequired,
   headCells: PropTypes.array.isRequired,
 };
+EnhancedTableHead.defaultProps = {
+  numSelected: 0
+};
 
 
 const EnhancedTableToolbar = (props) => {
@@ -62,12 +66,11 @@ const EnhancedTableToolbar = (props) => {
   const { numSelected, tableTitle } = props;
 
   return (
-    <Toolbar
-      className={clsx(classes.root)}
-    >
-        <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
+    <Toolbar className={clsx(classes.root)}>
+        <Typography className={classes.title}  color="primary" variant="h6" id="tableTitle" component="div">
             {tableTitle}
         </Typography>
+        <TripForm reloadScreen={props.reloadScreen} token={props.token} create={true}></TripForm>
 
         {numSelected > 0 ? (
             <Tooltip title="Delete">
@@ -77,9 +80,11 @@ const EnhancedTableToolbar = (props) => {
             </Tooltip>
         ) : (
             <Tooltip title="Delete">
-                <IconButton aria-label="delete" disabled>
-                    <DeleteIcon />
-                </IconButton>
+              <span>
+                  <IconButton aria-label="delete" disabled>
+                      <DeleteIcon />
+                  </IconButton>
+              </span>
             </Tooltip>
         )
     }
@@ -90,6 +95,9 @@ const EnhancedTableToolbar = (props) => {
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
   tableTitle: PropTypes.string.isRequired,
+};
+EnhancedTableToolbar.defaultProps = {
+  numSelected: 0
 };
 
 export default function TableList(props) {
@@ -108,9 +116,9 @@ export default function TableList(props) {
   };
 
   const handleClick = (event, name) => {
+    let newSelected = name === selected ? '' : name;
     // const selectedIndex = selected.indexOf(name);
     // let newSelected = [];
-    let newSelected = name == selected ? '' : name
 
     // if (selectedIndex === -1) {
     //   newSelected = newSelected.concat(selected, name);
@@ -140,57 +148,61 @@ export default function TableList(props) {
 
   return (
     <div className={classes.root}>
-      <Paper className={classes.paper}>
-        <EnhancedTableToolbar numSelected={selected.length} tableTitle={props.tableTitle} deleteSelected={deleteSelected}/>
-        <TableContainer>
-          <Table
-            className={classes.table}
-            aria-labelledby="tableTitle"
-            aria-label="enhanced table"
-          >
-            <EnhancedTableHead
-              classes={classes}
-              numSelected={selected.length}
-              onSelectAllClick={handleSelectAllClick}
-              rowCount={props.trips.length}
-              headCells={props.headCells}
-            />
-            <TableBody>
-              { props.trips.length > 0 ?
-                ( props.trips.map((row, index) => {
-                    const isItemSelected = isSelected(row.id);
-                    const labelId = `enhanced-table-checkbox-${index}`
-                        return (
-                            <TableRow 
-                                key={row.id}
-                                hover
-                                onClick={(event) => handleClick(event, row.id)}
-                                role="checkbox"
-                                aria-checked={isItemSelected}
-                                tabIndex={-1}
-                                selected={isItemSelected}
-                            >
-                                <TableCell padding="checkbox">
-                                    <Checkbox
-                                        checked={isItemSelected}
-                                        inputProps={{ 'aria-labelledby': labelId }}
-                                    />
-                                </TableCell>
-                                <TableCell component="th" scope="row" onClick={() => {history.push(`/trips/${row.id}`)}}>{row.name}</TableCell>
-                                <TableCell align="left">{row.startdate}</TableCell>
-                                <TableCell align="left">{row.start_location}</TableCell>
-                                <TableCell align="left">{row.budget}</TableCell>
-                                <TableCell align="left">{row.classification == 'none' ?  '--' : row.classification}</TableCell>
-                            </TableRow>
-                        )})
-                ) : (
-                  <TableRow />
-                )
-              }
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Paper>
+      <Grid container spacing={3} justify="center">     
+        <Grid item xs={10}>
+          <Paper className={classes.paper}>
+            <EnhancedTableToolbar reloadScreen={props.fetchData} token={props.token} tableTitle={props.tableTitle} deleteSelected={deleteSelected} numSelected={selected.length}/>
+            <TableContainer>
+              <Table
+                className={classes.table}
+                aria-labelledby="tableTitle"
+                aria-label="enhanced table"
+              >
+                <EnhancedTableHead
+                  classes={classes}
+                  numSelected={selected.length}
+                  onSelectAllClick={handleSelectAllClick}
+                  rowCount={props.trips.length}
+                  headCells={props.headCells}
+                />
+                <TableBody>
+                  { props.trips.length > 0 ?
+                    ( props.trips.map((row, index) => {
+                        const isItemSelected = isSelected(row.id);
+                        const labelId = `enhanced-table-checkbox-${index}`
+                            return (
+                                <TableRow 
+                                    key={row.id}
+                                    hover
+                                    onClick={(event) => handleClick(event, row.id)}
+                                    role="checkbox"
+                                    aria-checked={isItemSelected}
+                                    tabIndex={-1}
+                                    selected={isItemSelected}
+                                >
+                                    <TableCell padding="checkbox">
+                                        <Checkbox
+                                            checked={isItemSelected}
+                                            inputProps={{ 'aria-labelledby': labelId }}
+                                        />
+                                    </TableCell>
+                                    <TableCell component="th" scope="row" onClick={() => {history.push(`/trips/${row.id}`)}}>{row.name}</TableCell>
+                                    <TableCell align="left">{row.startdate}</TableCell>
+                                    <TableCell align="left">{row.start_location}</TableCell>
+                                    <TableCell align="left">{row.budget}</TableCell>
+                                    <TableCell align="left">{row.classification === 'none' ?  '--' : row.classification}</TableCell>
+                                </TableRow>
+                            )})
+                    ) : (
+                      <TableRow />
+                    )
+                  }
+                </TableBody>
+              </Table>
+            </TableContainer>
+            </Paper>
+        </Grid>
+      </Grid>
     </div>
   );
 }

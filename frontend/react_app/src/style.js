@@ -1,5 +1,5 @@
 
-import { lighten, makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -10,6 +10,13 @@ const useStyles = makeStyles((theme) => ({
       marginBottom: theme.spacing(2),
       overflow: 'auto',
       padding: theme.spacing(2),
+      color: theme.palette.text.secondary,
+      alignItems: 'center'
+    },
+    secondaryPaper: {
+      padding: theme.spacing(2),
+      display: 'flex',
+      flexDirection: 'column',
     },
     avatar: {
       margin: theme.spacing(1),
@@ -24,14 +31,26 @@ const useStyles = makeStyles((theme) => ({
     },
     table: {
       minWidth: 700,
-      },
+    },
     root: {
       flexGrow: 1,
       paddingLeft: theme.spacing(1),
       paddingRight: theme.spacing(1),
     },
+    secondaryRoot: {
+      display: 'flex'
+    },
+    dropdownInput: {
+        width: 500,
+        '& > * + *': {
+          marginTop: theme.spacing(3),
+        }
+    },
     title: {
       flex: '1 1 100%',
+    },
+    secondaryTitle: {
+      flexGrow: 1
     },
     toolbar: {
       paddingRight: 24, // keep right padding when drawer closed
@@ -91,15 +110,20 @@ const useStyles = makeStyles((theme) => ({
     content: {
       flexGrow: 1,
       height: '100vh',
-      overflow: 'auto',
     },
     container: {
       paddingTop: theme.spacing(4),
       paddingBottom: theme.spacing(4),
     },
     fixedHeight: {
-      height: 240,
+      height: 300,
     },
+    fixedHeightPaper: {
+      height: 300,
+      padding: theme.spacing(2),
+      display: 'flex',
+      flexDirection: 'column',
+    }
   }));
 
 export default useStyles;

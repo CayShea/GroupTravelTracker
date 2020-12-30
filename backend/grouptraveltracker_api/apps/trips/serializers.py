@@ -1,17 +1,34 @@
 from rest_framework import serializers
 from .models import Trip, CustomUser
-from .extensions.serializers import InlineTripMemberSerializer
+from ..trip_members.models import TripMember
+# from .extensions.serializers import InlineTripMemberSerializer
 import logging
 
 LOG = logging.getLogger(__name__)
 
 
+class InlineTripMemberSerializer(serializers.ModelSerializer):
+    display_name = serializers.CharField(source="user.display_name", read_only=True)
+
+    class Meta:
+        model = TripMember
+        fields = ("id", "display_name",)
+
+
+class InlineOwnerSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CustomUser
+        fields = ("id", "display_name",)
+
+
 class TripSerializer(serializers.ModelSerializer):
-    owner = InlineTripMemberSerializer(read_only=True)
+    owner = InlineOwnerSerializer(read_only=True)
     name = serializers.CharField(max_length=64)
     budget = serializers.DecimalField(max_digits=14, decimal_places=2, required=False, allow_null=True)
     startdate = serializers.DateField(required=False, allow_null=True)
     enddate = serializers.DateField(required=False, allow_null=True)
+    members = InlineTripMemberSerializer(many=True, read_only=True)
 
     class Meta:
         model = Trip
@@ -51,3 +68,9 @@ class TripWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Trip
         exclude = ("id", )
+
+class InlineTripSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Trip
+        fields = ("id", "name")
+        read_only_fields = ("id", "name")

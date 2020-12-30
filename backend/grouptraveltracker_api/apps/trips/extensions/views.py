@@ -35,9 +35,6 @@ class RWSerializerUpdateModelMixin(mixins.UpdateModelMixin):
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop("partial", False)
         instance = self.get_object()
-        nonce = get_request_nonce(request)
-        if nonce:
-            instance.nonce = nonce
         write_serializer = self.get_serializer(instance, data=request.data, partial=partial)
         write_serializer.is_valid(raise_exception=True)
         obj = write_serializer.save()

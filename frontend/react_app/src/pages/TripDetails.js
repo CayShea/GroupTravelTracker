@@ -1,121 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import TableCell from '@material-ui/core/TableCell';
 import { useParams } from 'react-router-dom';
-
-// import useStyles from '../style';
-import api from '../api';
-import clsx from 'clsx';
-
 import { makeStyles } from '@material-ui/core/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-import Badge from '@material-ui/core/Badge';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
-import Link from '@material-ui/core/Link';
-
-import Drawer from '@material-ui/core/Drawer';
 import Paper from '@material-ui/core/Paper';
-import MenuIcon from '@material-ui/icons/Menu';
-import EditIcon from '@material-ui/icons/Edit';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import { mainListItems, secondaryListItems } from '../components/ListItem';
+import clsx from 'clsx';
+
+import api from '../api';
 import TripSummary from '../components/TripSummary';
-import BudgetOverview from '../components/BudgetOverview';
-import CalendarOverview from '../components/CalendarOverview';
-import MapOverview from '../components/MapOverview';
-import Orders from '../components/Orders';
-
-
-const drawerWidth = 240;
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
-  },
-  toolbar: {
-    paddingRight: 24, // keep right padding when drawer closed
-  },
-  toolbarIcon: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: '0 8px',
-    ...theme.mixins.toolbar,
-  },
-  appBar: {
-    marginTop: theme.spacing(8),
-    backgroundColor: '#2196f3',
-    zIndex: theme.zIndex.drawer + 1,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-  },
-  appBarShift: {
-    marginTop: theme.spacing(8),
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  menuButton: {
-    marginRight: 36,
-  },
-  menuButtonHidden: {
-    display: 'none',
-  },
-  title: {
-    flexGrow: 1,
-  },
-  drawerPaper: {
-    position: 'relative',
-    whiteSpace: 'nowrap',
-    width: drawerWidth,
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  drawerPaperClose: {
-    overflowX: 'hidden',
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    width: theme.spacing(7),
-    [theme.breakpoints.up('sm')]: {
-      width: theme.spacing(9),
-    },
-  },
-  appBarSpacer: theme.mixins.toolbar,
-  content: {
-    flexGrow: 1,
-    height: '100vh',
-    overflow: 'auto',
-  },
-  container: {
-    paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(4),
-  },
-  paper: {
-    padding: theme.spacing(2),
-    display: 'flex',
-    overflow: 'auto',
-    flexDirection: 'column',
-  },
-  fixedHeight: {
-    height: 240,
-  },
-}));
+import SideBar from '../components/SideBar';
+import useStyles from '../style';
+// import BudgetOverview from '../components/BudgetOverview';
+// import MapOverview from '../components/MapOverview';
+// import Orders from '../components/Orders';
 
 
 export default function TripDetails(props) {
@@ -123,7 +20,6 @@ export default function TripDetails(props) {
     let { id } = useParams()
     const [ tripDetails, setTripDetails ] = useState({});
     const  [ hasError, setErrors ] =  useState(false);
-    // const  [ events, setEvents ]= useState([]);
 
     async function fetchData() {
         const res = await fetch(api.trips.detail(props.token, id));
@@ -137,93 +33,43 @@ export default function TripDetails(props) {
         fetchData();
     }, []);
 
-    const [open, setOpen] = React.useState(true);
-    const handleDrawerOpen = () => {
-      setOpen(true);
-    };
-    const handleDrawerClose = () => {
-      setOpen(false);
-    };
-    const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-  
     return (
-      <div className={classes.root}>
-        <CssBaseline />
-        <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
-          <Toolbar className={classes.toolbar}>
-            <IconButton
-              edge="start"
-              color="inherit"
-              aria-label="open drawer"
-              onClick={handleDrawerOpen}
-              className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-                {tripDetails.name} Trip
-            </Typography>
-            <IconButton onClick={() => {alert("link to edit TRIP")}} color="inherit">
-                <EditIcon />
-            </IconButton>
-            <IconButton onClick={() => {alert("link to latest updates to trip by other Travelers")}} color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-          </Toolbar>
-        </AppBar>
-        <Drawer
-          variant="permanent"
-          classes={{
-            paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
-          }}
-          open={open}
-        >
-          <div className={classes.toolbarIcon}>
-            <IconButton onClick={handleDrawerClose}>
-              <ChevronLeftIcon />
-            </IconButton>
-          </div>
-          <Divider />
-          <List>{mainListItems}</List>
-          <Divider />
-          <List>{secondaryListItems}</List>
-        </Drawer>
+      <div className={classes.secondaryRoot}>
+        <SideBar tripDetails={tripDetails} isDashboardView={true} fetchData={fetchData} token={props.token}/>
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
           <Container maxWidth="lg" className={classes.container}>
             <Grid container spacing={3}>
               {/* Calendar */}
-              <Grid item xs={12} md={4} lg={3}>
-                <Paper className={fixedHeightPaper}>
-                  <CalendarOverview trip={tripDetails}/>
+              <Grid item xs={12} md={4} lg={4}>
+                <Paper className={classes.fixedHeightPaper}>
+
                 </Paper>
               </Grid>
-              {/* Map */}
-              <Grid item xs={12} md={4} lg={3}>
-                <Paper className={fixedHeightPaper}>
-                  <MapOverview trip={tripDetails}/>
+              {/* Map Overview*/}
+              <Grid item xs={12} md={4} lg={4}>
+                <Paper className={classes.fixedHeightPaper}>
+                  {/* <MapOverview start_location={tripDetails.start_location} apiKey={("AIzaSyA6iG7LGNxxs_ZT6eIkTUWK1sCd9Xf6i9w")}/> */}
                 </Paper>
               </Grid>
               {/* Budget */}
-              <Grid item xs={12} md={4} lg={3}>
-                <Paper className={fixedHeightPaper}>
-                  <BudgetOverview trip={tripDetails}/>
+              <Grid item xs={12} md={4} lg={4}>
+                <Paper className={classes.fixedHeightPaper}>
+                  {/* <BudgetOverview trip={tripDetails}/> */}
                 </Paper>
               </Grid>
               {/* TripSummary */}
               <Grid item xs={12}>
-                <Paper className={fixedHeightPaper}>
+                <Paper className={classes.secondaryPaper}>
                   <TripSummary trip={tripDetails}/>
                 </Paper>
               </Grid>
-              {/* Recent Orders */}
+              {/* Recent Orders
               <Grid item xs={12}>
-                <Paper className={classes.paper}>
+                <Paper className={classes.secondaryPaper}>
                   <Orders />
                 </Paper>
-              </Grid>
+              </Grid> */}
             </Grid>
           </Container>
         </main>

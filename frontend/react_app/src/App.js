@@ -2,7 +2,6 @@ import React from 'react';
 import Urls from './routes/urls';
 import {connect} from 'react-redux';
 import * as actions from './store/authActions';
-import { StyleSheet } from 'react-native';
 
 function App(props) {
 
@@ -32,45 +31,5 @@ const mapDispatchToProps = (dispatch) => {
     logout: () => dispatch(actions.authLogout())
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  engine: {
-    position: 'absolute',
-    right: 0,
-  },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-  footer: {
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
-  },
-  chips: {
-    display: 'flex',
-    justifyContent: 'center',
-    flexWrap: 'wrap',
-    margin: 2,
-  },
-});
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

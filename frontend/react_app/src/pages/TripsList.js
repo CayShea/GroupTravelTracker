@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
-
-import useStyles from '../style';
-import CreateTrip from '../components/CreateTrip';
-import TableList from '../components/TableList';
-import api from '../api';
-
 import Grid from '@material-ui/core/Grid';
+
+import TableList from '../components/TableList';
+import useStyles from '../style';
+import api from '../api';
 
 
 export default function TripsList(props) {
@@ -37,7 +35,6 @@ export default function TripsList(props) {
 
     return (
           <div>
-          <CreateTrip reloadScreen={fetchData} token={props.token}></CreateTrip>
             <Grid container direction="row" justify="center" alignItems="center">
               <Grid xs={11} item justify="center">
                 <TableList trips={trips} headCells={headCells} tableTitle={'Trips'} token={props.token} fetchData={fetchData} ></TableList>

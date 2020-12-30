@@ -1,11 +1,15 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import CustomUser
 
 
-class UserAdmin(BaseUserAdmin):
+class CustomUserAdmin(BaseUserAdmin):
+    add_form = UserCreationForm
+    form = UserChangeForm
+    model = CustomUser
     fieldsets = (
-        (None, {'fields': ('email', 'password', 'name', 'last_login')}),
+        (None, {'fields': ('email', 'password', 'last_login', 'display_name', 'photo')}),
         ('Permissions', {'fields': (
             'is_active', 
             'is_staff', 
@@ -19,7 +23,7 @@ class UserAdmin(BaseUserAdmin):
             None,
             {
                 'classes': ('wide',),
-                'fields': ('email', 'password1', 'password2')
+                'fields': ('email', 'password1', 'password2', 'display_name', 'photo')
             }
         ),
     )
@@ -31,4 +35,4 @@ class UserAdmin(BaseUserAdmin):
     filter_horizontal = ('groups', 'user_permissions',)
 
 
-admin.site.register(CustomUser, UserAdmin)
+admin.site.register(CustomUser, CustomUserAdmin)
