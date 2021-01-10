@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import Trip, CustomUser
+from ..events.models import Event
 from ..trip_members.models import TripMember
-# from .extensions.serializers import InlineTripMemberSerializer
 import logging
 
 LOG = logging.getLogger(__name__)
@@ -12,27 +12,44 @@ class InlineTripMemberSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TripMember
-        fields = ("id", "display_name",)
+        fields = ("display_name",)
 
 
-class InlineOwnerSerializer(serializers.ModelSerializer):
+class InlineEventSerializer(serializers.ModelSerializer):
+    calendarId = serializers.SerializerMethodField('_going')
+
+    def _going(self, obj):
+        request = self.context.get('request', None)
+        if request:
+            current_user = request.user.display_name
+            if current_user in obj.attending:
+                return "Going"
+            else:
+                return "notGoing"
 
     class Meta:
-        model = CustomUser
-        fields = ("id", "display_name",)
+        model = Event
+        fields = ("id", "title", "body", "start", "end", "attending", "calendarId")
 
 
 class TripSerializer(serializers.ModelSerializer):
-    owner = InlineOwnerSerializer(read_only=True)
+    owner = serializers.CharField(source="owner.display_name", read_only=True)
     name = serializers.CharField(max_length=64)
     budget = serializers.DecimalField(max_digits=14, decimal_places=2, required=False, allow_null=True)
     startdate = serializers.DateField(required=False, allow_null=True)
     enddate = serializers.DateField(required=False, allow_null=True)
     members = InlineTripMemberSerializer(many=True, read_only=True)
+    events = InlineEventSerializer(many=True, read_only=True)
+    current_user = serializers.SerializerMethodField('_user')
+    
+    def _user(self, obj):
+        request = self.context.get('request', None)
+        if request:
+            return request.user.display_name
 
     class Meta:
         model = Trip
-        fields = '__all__'
+        fields = ("name", "id", "startdate", "enddate", "start_location", "summary", "budget", "classification", "owner", "members", "events", "current_user")
 
 
 class TripWriteSerializer(serializers.ModelSerializer):
@@ -60,7 +77,7 @@ class TripWriteSerializer(serializers.ModelSerializer):
         summary = validated_data.get("summary")
         budget = validated_data.get("budget")
         classification = validated_data.get("classification")
-        validated_data["owner_id"] = (CustomUser(id=self.context['request'].user)).id
+        validated_data["owner_id"] = self.context['request'].user
 
         trip = Trip.objects.create(**validated_data)
         return trip
@@ -68,6 +85,7 @@ class TripWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Trip
         exclude = ("id", )
+
 
 class InlineTripSerializer(serializers.ModelSerializer):
     class Meta:

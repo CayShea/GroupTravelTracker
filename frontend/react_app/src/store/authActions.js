@@ -82,13 +82,14 @@ export const authLogin = (email, password) => {
     }
 }
 
-export const authSignup = (email, password) => {
+export const authSignup = (email, password, displayName) => {
     return dispatch => {
         dispatch(authStart());
         axios.post(`${settings.API_SERVER}/registration/`, {
             email: email,
             password1: password,
-            password2: password
+            password2: password,
+            display_name: displayName
         })
         .then(res => {
             const token = res.data.key;

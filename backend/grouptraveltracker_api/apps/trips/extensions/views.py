@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.views.generic.base import View
 from django.shortcuts import get_object_or_404
 from rest_framework import mixins, status, viewsets
+from rest_framework import generics
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
 

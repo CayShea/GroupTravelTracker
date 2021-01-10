@@ -4,8 +4,6 @@ import Login from '../pages/Login';
 import SignUp from '../pages/SignUp';
 import TripsList from '../pages/TripsList';
 import TripDetails from '../pages/TripDetails';
-import CalendarScreen from '../pages/CalendarScreen';
-import MapScreen from '../pages/MapScreen';
 import Layout from '../components/Layout';
 
 function PrivateRoute({ isAuthenticated, children, ...rest}) {
@@ -38,8 +36,6 @@ function Urls(props) {
                         <Route exact path="/signup/"> <SignUp {...props} /></Route>
                         <PrivateRoute exact path="/trips" isAuthenticated={props.isAuthenticated}><TripsList {...props}/></PrivateRoute>
                         <PrivateRoute exact path="/trips/:id" isAuthenticated={props.isAuthenticated}><TripDetails {...props}/></PrivateRoute>
-                        <PrivateRoute exact path="/calendar/" isAuthenticated={props.isAuthenticated}><CalendarScreen {...props} /></PrivateRoute>
-                        <PrivateRoute exact path="/map/" isAuthenticated={props.isAuthenticated}><MapScreen {...props} /></PrivateRoute>
                         <PrivateRoute exact path="/" isAuthenticated={props.isAuthenticated}><TripsList {...props}/></PrivateRoute>
                     </Switch>
                 </Layout>
