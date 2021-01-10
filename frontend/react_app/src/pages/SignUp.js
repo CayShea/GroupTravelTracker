@@ -20,6 +20,7 @@ function SignUp(props) {
   const classes = useStyles();
   const [email, setEmail] = React.useState(null);
   const [password, setPassword] = React.useState(null);
+  const [displayName, setDisplayName] = React.useState(null);
   const [open, setOpen] = React.useState(false);
 
   let history = useHistory();
@@ -34,13 +35,14 @@ function SignUp(props) {
     switch(event.target.id) {
       case 'email': setEmail(event.target.value); break;
       case 'password': setPassword(event.target.value); break;
+      case 'displayName': setDisplayName(event.target.value); break;
       default: return null;
     }
  };
 
  const handleSubmit = (e) => {
   e.preventDefault();
-  props.onAuth(email, password);
+  props.onAuth(email, password, displayName);
   setOpen(true);
  };
 
@@ -61,9 +63,8 @@ function SignUp(props) {
         </Typography>
         <form className={classes.form} noValidate onSubmit={handleSubmit}>
           <Grid container spacing={2}>
-            {/* <Grid item xs={12}>
+            <Grid item xs={12}>
               <TextField
-                autoComplete="fname"
                 name="displayName"
                 variant="outlined"
                 required
@@ -73,7 +74,7 @@ function SignUp(props) {
                 autoFocus
                 onChange={handleFormFieldChange}
               />
-            </Grid> */}
+            </Grid>
             <Grid item xs={12}>
               <TextField
                 variant="outlined"
@@ -134,7 +135,7 @@ function SignUp(props) {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onAuth: (email, password) => dispatch(actions.authSignup(email, password))
+    onAuth: (email, password, displayName) => dispatch(actions.authSignup(email, password, displayName))
   }
 }
 

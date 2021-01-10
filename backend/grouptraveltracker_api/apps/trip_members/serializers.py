@@ -10,6 +10,7 @@ from asgiref.sync import async_to_sync
 from ..trips.models import Trip
 from ..trips.serializers import InlineTripSerializer
 from ..users.models import CustomUser
+from ..events.models import Event
 from .models import TripMember
 
 LOG = logging.getLogger(__name__)

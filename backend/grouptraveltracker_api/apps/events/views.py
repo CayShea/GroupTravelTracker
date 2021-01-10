@@ -1,49 +1,49 @@
 from django.shortcuts import render
 from rest_framework import viewsets, mixins, status
 from drf_yasg.utils import swagger_auto_schema
-from ..trips.extensions.views import RWSerializerModelViewSet
+from ..trips.extensions.views import RWSerializerModelViewSet, GetObjectDistinctMixin
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
 from rest_framework.response import Response
 import logging
 
-from .models import TripMember
-from .serializers import TripMemberSerializer, TripMemberWriteSerializer
-from ..trips.models import Trip
+from .models import Event
+from .serializers import EventSerializer, EventWriteSerializer
 
 LOG = logging.getLogger(__name__)
 
 
-class TripMemberViewSet(RWSerializerModelViewSet):
-    model = TripMember
-    serializer_class_read = TripMemberSerializer
-    serializer_class_write = TripMemberWriteSerializer
+class EventViewSet(GetObjectDistinctMixin, RWSerializerModelViewSet):
+    model = Event
+    serializer_class_read = EventSerializer
+    serializer_class_write = EventWriteSerializer
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        if self.request.GET.get('trip_id'):
-            return TripMember.objects.filter(user__id=self.request.user.id, trip__id=self.request.GET.get('trip_id'))
-        else:
-            return TripMember.objects.filter(user__id=self.request.user.id)
+        return Event.objects.all()
 
     @swagger_auto_schema(
-        request_body=TripMemberWriteSerializer(), responses={status.HTTP_201_CREATED: TripMemberSerializer()}
+        request_body=EventWriteSerializer(), responses={status.HTTP_201_CREATED: EventSerializer()}
     )
     def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)
 
     @swagger_auto_schema(
-        request_body=TripMemberWriteSerializer(), responses={status.HTTP_201_CREATED: TripMemberSerializer()}
+        request_body=EventWriteSerializer(), responses={status.HTTP_200_OK: EventSerializer()}
     )
     def update(self, request, *args, **kwargs):
         return super().update(request, *args, **kwargs)
+
+    @swagger_auto_schema(request_body=EventWriteSerializer(), responses={status.HTTP_200_OK: EventSerializer()})
+    def partial_update(self, request, *args, **kwargs):
+        return super().partial_update(request, *args, **kwargs)
 
     def destroy(self, request: Request, *arg, **kwargs) -> Response:
         instance = self.get_object()
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    def perform_destroy(self, instance: "Trip"):
+    def perform_destroy(self, instance: "Event"):
         instance.delete()

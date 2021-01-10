@@ -164,57 +164,46 @@ export default function SideBar(props){
                 </div>
             <Divider />
             <List>
-                <ListItem button onClick={() => {history.push(`/trips/${props.tripDetails.id}`)}}>
-                <ListItemIcon>
-                  <DashboardIcon />
-                </ListItemIcon>
-                <ListItemText primary="Dashboard" />
+                <ListItem button onClick={props.selectDashboard}>
+                  <ListItemIcon>
+                    <DashboardIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Dashboard" />
                 </ListItem>
-                <ListItem button onClick={() => {
-                  history.push({
-                    pathname: `/calendar/`,
-                    tripDetails: props.tripDetails
-                  })}}
-                >
-                <ListItemIcon>
-                  <EventIcon />
-                </ListItemIcon>
-                <ListItemText primary="Calendar" />
+                <ListItem button onClick={props.selectCalendar} >
+                  <ListItemIcon>
+                    <EventIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Calendar" />
                 </ListItem>
-                <ListItem button onClick={() => {
-                  history.push({
-                    pathname: `/map/`,
-                    tripDetails: props.tripDetails,
-                    apiKey: "AIzaSyA6iG7LGNxxs_ZT6eIkTUWK1sCd9Xf6i9w"
-                  })}}
-                >
-                <ListItemIcon>
-                  <MapIcon />
-                </ListItemIcon>
-                <ListItemText primary="Map" />
+                <ListItem button onClick={props.selectMap}>
+                  <ListItemIcon>
+                    <MapIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Map" />
                 </ListItem>
             </List>
             <Divider />
             <List>
-                <ListItemText>Coming soon...</ListItemText>
-                <ListItem button disabled>
+              <ListItemText>Coming soon...</ListItemText>
+              <ListItem button disabled>
                 <ListItemIcon>
                     <LayersIcon />
                 </ListItemIcon>
                 <ListItemText primary="Itinerary" />
-                </ListItem>
-                <ListItem button disabled>
+              </ListItem>
+              <ListItem button disabled>
                 <ListItemIcon>
                     <PeopleIcon />
                 </ListItemIcon>
                 <ListItemText primary="Travelers" />
-                </ListItem>
-                <ListItem button disabled>
+              </ListItem>
+              <ListItem button disabled>
                 <ListItemIcon>
                     <AssignmentIcon />
                 </ListItemIcon>
                 <ListItemText primary="Travel Docs" />
-                </ListItem>
+              </ListItem>
             </List>
             </Drawer>
         </div>

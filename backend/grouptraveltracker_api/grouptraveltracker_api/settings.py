@@ -51,6 +51,7 @@ TRAVEL_TRACKER_APPS = [
     'apps.users.apps.UsersConfig',
     'apps.trips.apps.TripsConfig',
     'apps.trip_members.apps.TripMembersConfig',
+    'apps.events.apps.EventsConfig',
 ]
 
 INSTALLED_APPS = TRAVEL_TRACKER_APPS + REQUIRED_APPS
