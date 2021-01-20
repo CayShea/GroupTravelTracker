@@ -20,7 +20,6 @@ export default function TripDetails(props) {
       const res = await fetch(api.trips.detail(props.token, id));
       res.json()
       .then(res => {
-        console.log("THE TRIP DETAILS >>>>>>>>>", res)
         setTripDetails(res);
       })
       .catch(err => setErrors(err));
