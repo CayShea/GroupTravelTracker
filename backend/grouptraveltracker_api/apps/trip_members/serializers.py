@@ -45,6 +45,7 @@ class TripMemberWriteSerializer(serializers.Serializer):
         trip_members = validated_data["trip_members"]
 
         with transaction.atomic():
+            create_these_members = []
             current_trip_members = TripMember.objects.filter(trip=trip).values_list("user__display_name", flat=True).distinct()
 
             if current_trip_members:
@@ -54,9 +55,8 @@ class TripMemberWriteSerializer(serializers.Serializer):
 
                 if new_members:
                     for new_member in new_members:
-                        create_these_members = []
                         create_these_members.append(TripMember(trip=trip, user=CustomUser.objects.get(display_name=new_member)))
-                        TripMember.objects.bulk_create(create_these_members)
+                    TripMember.objects.bulk_create(create_these_members)
                 if remove_members:
                     delete_these_members = TripMember.objects.filter(trip=trip, user__display_name__in=remove_members)
                     delete_these_members.delete()
@@ -64,9 +64,8 @@ class TripMemberWriteSerializer(serializers.Serializer):
                     return {}
             else:
                 for new_member in trip_members:
-                    create_these_members = []
                     create_these_members.append(TripMember(trip=trip, user=new_member))
-                    TripMember.objects.bulk_create(create_these_members)
+                TripMember.objects.bulk_create(create_these_members)
             return {}
 
 

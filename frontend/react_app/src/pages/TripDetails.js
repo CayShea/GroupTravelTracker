@@ -16,7 +16,7 @@ export default function TripDetails(props) {
     const  [ hasError, setErrors ] =  useState(false);
     const [ componentShowing, setComponentShowing ] = useState('dashboard');
 
-    async function fetchTrips() {
+    async function fetchTrip() {
       const res = await fetch(api.trips.detail(props.token, id));
       res.json()
       .then(res => {
@@ -26,7 +26,7 @@ export default function TripDetails(props) {
       .catch(err => setErrors(err));
     };
     useEffect(() => {
-      fetchTrips();
+      fetchTrip();
     }, []);
 
     const selectCalendar = () => {
@@ -43,7 +43,7 @@ export default function TripDetails(props) {
       switch(props.value) {
         case 'calendar':
           return (
-            <Calendar tripDetails={tripDetails}></Calendar>
+            <Calendar tripDetails={tripDetails} token={props.token} refetchTrip={fetchTrip}></Calendar>
           )
         case 'map':
             return (
@@ -66,12 +66,12 @@ export default function TripDetails(props) {
           selectCalendar={selectCalendar}
           selectMap={selectMap}
           isDashboardView={true} 
-          fetchData={fetchTrips} 
+          fetchData={fetchTrip} 
           token={props.token}
         />
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
-            <RenderSwitch value={componentShowing}/>
+            <RenderSwitch value={componentShowing} token={props.token}/>
         </main>
       </div>
     );

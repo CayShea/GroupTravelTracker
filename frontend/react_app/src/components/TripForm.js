@@ -11,7 +11,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import FormControl from '@material-ui/core/FormControl';
-import { startOfToday } from 'date-fns'
+import { startOfToday } from 'date-fns';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
 import EditIcon from '@material-ui/icons/Edit';
@@ -98,7 +98,6 @@ export default function CreateTrip(props) {
   const handleSubmit = (e) => {
       e.preventDefault();
       props.create ? createTrip() : updateTrip();
-      updateTripMembers();
   };
 
   async function createTrip() {
@@ -118,6 +117,7 @@ export default function CreateTrip(props) {
   async function updateTrip() {
     try {
         delete values.owner;
+        updateTripMembers();
         const res = await fetch(api.trips.edit(props.token, values));
         res.json()
         .then(() => {
@@ -129,15 +129,17 @@ export default function CreateTrip(props) {
   }};
 
   async function updateTripMembers() {
-    try {
-        const display_names = currentMembers.map((x) => x.display_name)
-        const res = await fetch(api.tripMembers.create(props.token, display_names, props.tripDetails.id));
-        res.json()
-        .then(() => {
-            console.log(res)
-        })
-    } catch (err) {
-        setErrors(err);
+    if (currentMembers) {
+        try {
+            const display_names = currentMembers.map((x) => x.display_name)
+            const res = await fetch(api.tripMembers.create(props.token, display_names, props.tripDetails.id));
+            res.json()
+            .then(() => {
+                console.log(res)
+            })
+        } catch (err) {
+            setErrors(err);
+        }
     }
   };
 

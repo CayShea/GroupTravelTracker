@@ -17,19 +17,21 @@ class InlineTripMemberSerializer(serializers.ModelSerializer):
 
 class InlineEventSerializer(serializers.ModelSerializer):
     calendarId = serializers.SerializerMethodField('_going')
+    category = serializers.CharField(default="time")
+    isVisible = serializers.BooleanField(default=True)
 
     def _going(self, obj):
         request = self.context.get('request', None)
         if request:
             current_user = request.user.display_name
-            if current_user in obj.attending:
-                return "Going"
+            if obj.attendees and current_user in obj.attendees:
+                return "going"
             else:
                 return "notGoing"
 
     class Meta:
         model = Event
-        fields = ("id", "title", "body", "start", "end", "attending", "calendarId")
+        fields = ("id", "title", "body", "start", "end", "attendees", "location", "calendarId", "category", "isVisible")
 
 
 class TripSerializer(serializers.ModelSerializer):
@@ -63,6 +65,11 @@ class TripWriteSerializer(serializers.ModelSerializer):
     startdate = serializers.DateField(required=False, allow_null=True)
     enddate = serializers.DateField(required=False, allow_null=True)
     budget = serializers.DecimalField(max_digits=14, decimal_places=2, required=False, allow_null=True)
+    display_names = serializers.ListField(
+        child=serializers.CharField(),
+        required=False,
+        allow_empty=True,
+    )
 
     def validate(self, attrs: dict) -> dict:
         validated_data = super().validate(attrs)
@@ -70,16 +77,22 @@ class TripWriteSerializer(serializers.ModelSerializer):
         return validated_data
 
     def create(self, validated_data):
+        create_these_members = []
         name = validated_data["name"]
         validated_data["startdate"] = validated_data.get("startdate")
         validated_data["enddate"] = validated_data.get("enddate")
         start_location = validated_data.get("start_location")
         summary = validated_data.get("summary")
         budget = validated_data.get("budget")
+        display_names = validated_data.get("display_names")
         classification = validated_data.get("classification")
-        validated_data["owner_id"] = self.context['request'].user
+        owner_id = validated_data["owner_id"] = self.context['request'].user
 
         trip = Trip.objects.create(**validated_data)
+        create_these_members.append(TripMember(trip=trip, user=CustomUser.objects.get(id=owner_id)))
+        for member in display_names:
+            create_these_members.append(TripMember(trip=trip, user=CustomUser.objects.get(display_name=member)))
+        TripMember.objects.bulk_create(create_these_members)
         return trip
 
     class Meta:

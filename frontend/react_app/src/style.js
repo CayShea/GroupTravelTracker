@@ -22,9 +22,19 @@ const useStyles = makeStyles((theme) => ({
       margin: theme.spacing(1),
       backgroundColor: theme.palette.secondary.main,
     },
+    textField: {
+      marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(1),
+      width: 200,
+    },
     form: {
       width: '100%',
       marginTop: theme.spacing(3),
+    },
+    formControl: {
+      margin: theme.spacing(1),
+      minWidth: 120,
+      marginBottom: '10px'
     },
     submit: {
       margin: theme.spacing(3, 0, 2),
@@ -115,6 +125,10 @@ const useStyles = makeStyles((theme) => ({
       paddingTop: theme.spacing(4),
       paddingBottom: theme.spacing(4),
     },
+    container2: {
+      display: 'flex',
+      flexWrap: 'wrap',
+    },
     fixedHeight: {
       height: 300,
     },
@@ -123,7 +137,7 @@ const useStyles = makeStyles((theme) => ({
       padding: theme.spacing(2),
       display: 'flex',
       flexDirection: 'column',
-    }
+    },
   }));
 
 export default useStyles;
