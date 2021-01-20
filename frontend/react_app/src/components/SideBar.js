@@ -176,28 +176,28 @@ export default function SideBar(props){
                   </ListItemIcon>
                   <ListItemText primary="Calendar" />
                 </ListItem>
-                <ListItem button onClick={props.selectMap}>
+            </List>
+            <Divider />
+            <List>
+              <ListItemText>Coming soon...</ListItemText>
+                <ListItem button disabled onClick={props.selectMap}>
                   <ListItemIcon>
                     <MapIcon />
                   </ListItemIcon>
                   <ListItemText primary="Map" />
                 </ListItem>
-            </List>
-            <Divider />
-            <List>
-              <ListItemText>Coming soon...</ListItemText>
               <ListItem button disabled>
                 <ListItemIcon>
                     <LayersIcon />
                 </ListItemIcon>
                 <ListItemText primary="Itinerary" />
               </ListItem>
-              <ListItem button disabled>
+              {/* <ListItem button disabled>
                 <ListItemIcon>
                     <PeopleIcon />
                 </ListItemIcon>
                 <ListItemText primary="Travelers" />
-              </ListItem>
+              </ListItem> */}
               <ListItem button disabled>
                 <ListItemIcon>
                     <AssignmentIcon />
