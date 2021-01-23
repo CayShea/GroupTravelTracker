@@ -18,6 +18,16 @@ const useStyles = makeStyles((theme) => ({
       display: 'flex',
       flexDirection: 'column',
     },
+    ternaryPaper: {
+      marginTop: theme.spacing(1),
+      display: 'flex',
+      flexDirection: 'column',
+      marginBottom: theme.spacing(2),
+      overflow: 'auto',
+      padding: theme.spacing(2),
+      color: theme.palette.text.secondary,
+      alignItems: 'stretch',
+    },
     avatar: {
       margin: theme.spacing(1),
       backgroundColor: theme.palette.secondary.main,
