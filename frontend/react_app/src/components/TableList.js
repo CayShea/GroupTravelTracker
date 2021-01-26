@@ -67,11 +67,20 @@ const EnhancedTableToolbar = (props) => {
 
   return (
     <Toolbar className={clsx(classes.root)}>
-        <Typography className={classes.title}  color="primary" variant="h6" id="tableTitle" component="div">
+        <TripForm reloadScreen={props.reloadScreen} token={props.token} create={true}></TripForm> 
+        <Typography className={classes.title}  color="primary" variant="p" id="create" component="div">
+            Create
+        </Typography>
+
+        
+        <Typography className={classes.title}  color="primary" variant="h6" id="tableTitle" component="div" align='center'>
             {tableTitle}
         </Typography>
-        <TripForm reloadScreen={props.reloadScreen} token={props.token} create={true}></TripForm>
+        
 
+        <Typography className={classes.title}  color="primary" variant="p" id="create" component="div" align='right'>
+            Delete
+        </Typography>
         {numSelected > 0 ? (
             <Tooltip title="Delete">
                 <IconButton aria-label="delete" onClick={props.deleteSelected}>
@@ -150,7 +159,7 @@ export default function TableList(props) {
     <div className={classes.root}>
       <Grid container spacing={3} justify="center">     
         <Grid item xs={10}>
-          <Paper className={classes.paper}>
+          <Paper className={classes.ternaryPaper}>
             <EnhancedTableToolbar reloadScreen={props.fetchData} token={props.token} tableTitle={props.tableTitle} deleteSelected={deleteSelected} numSelected={selected.length}/>
             <TableContainer>
               <Table
