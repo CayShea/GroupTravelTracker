@@ -22,7 +22,10 @@ class EventViewSet(GetObjectDistinctMixin, RWSerializerModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Event.objects.all()
+        if self.request.GET.get('trip_id'):
+            return (Event.objects.filter(trip__owner__id=self.request.user.id, trip__id=self.request.GET.get('trip_id')).order_by('start'))
+        else:
+            return (Event.objects.filter(trip__owner_id=self.request.user.id).order_by('start'))
 
     @swagger_auto_schema(
         request_body=EventWriteSerializer(), responses={status.HTTP_201_CREATED: EventSerializer()}

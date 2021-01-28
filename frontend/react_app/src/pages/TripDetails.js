@@ -11,8 +11,10 @@ import Map from '../components/Map';
 
 export default function TripDetails(props) {
     const classes = useStyles();
-    let { id } = useParams()
+    const API_KEY = `${process.env.REACT_APP_geocode}`;
+    let { id } = useParams();
     const [ tripDetails, setTripDetails ] = useState({});
+    const [ events, setEvents ] = useState([]);
     const  [ hasError, setErrors ] =  useState(false);
     const [ componentShowing, setComponentShowing ] = useState('dashboard');
 
@@ -26,6 +28,18 @@ export default function TripDetails(props) {
     };
     useEffect(() => {
       fetchTrip();
+    }, []);
+
+    async function fetchEvents() {
+      const res = await fetch(api.events.list(props.token, id));
+      res.json()
+      .then(res => {
+        setEvents(res);
+      })
+      .catch(err => setErrors(err));
+    };
+    useEffect(() => {
+      fetchEvents();
     }, []);
 
     const selectCalendar = () => {
@@ -42,15 +56,15 @@ export default function TripDetails(props) {
       switch(props.value) {
         case 'calendar':
           return (
-            <Calendar tripDetails={tripDetails} token={props.token} refetchTrip={fetchTrip}></Calendar>
+            <Calendar tripDetails={tripDetails} token={props.token} events={events} refetchTrip={fetchTrip}></Calendar>
           )
         case 'map':
             return (
-              <Map tripDetails={tripDetails} start_location={tripDetails.start_location} apiKey="AIzaSyC7wcXFUcRT2BLoQPiFdBDjApYiZHIPyJs"></Map>
+            <Map tripDetails={tripDetails} location={tripDetails.location} events={events} apiKey={API_KEY}></Map>
             )
         case 'dashboard':
           return (
-            <Dashboard tripDetails={tripDetails}></Dashboard>
+            <Dashboard tripDetails={tripDetails} events={events}></Dashboard>
           );
         default:
           return null;
@@ -61,6 +75,7 @@ export default function TripDetails(props) {
       <div className={classes.secondaryRoot}>
         <SideBar 
           tripDetails={tripDetails}
+          events={events}
           selectDashboard={selectDashboard}
           selectCalendar={selectCalendar}
           selectMap={selectMap}

@@ -30,7 +30,7 @@ EventForm.defaultProps = {
 export default function EventForm (props) {
     const classes = useStyles();
     const [ newEvent, setNewEvent ] = useState(props.eventDetails);
-    console.log(" THE new EVENT .....", newEvent);
+    console.log(" THE new EVENT .....", props.eventDetails);
 
     const handleChange = (prop) => (event) => {
         setNewEvent({ ...newEvent, [prop]: event.target.value });
@@ -84,10 +84,10 @@ export default function EventForm (props) {
                         <TextField
                             autoFocus
                             margin="dense"
-                            id="location"
+                            id="start_location"
                             label="Location"
-                            value={newEvent.location}
-                            onChange={handleChange('location')}
+                            value={newEvent.location_string}
+                            onChange={handleChange('location_string')}
                             type="text"
                             fullWidth
                         />

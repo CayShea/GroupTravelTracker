@@ -24,6 +24,7 @@ export default function BasicDatePicker(props) {
         InputLabelProps={{
           shrink: true,
         }}
+        onChange={props.handleChange}
       />
     </form>
   );

@@ -2,10 +2,10 @@ import { API_SERVER } from '../settings.js';
 
 
 export default {
-    list(token){
+    list(token, trip_id){
         const header = new Headers({'Authorization': `Token ${token}`, 'Content-Type': 'application/json'});
         return (
-            new Request( `${API_SERVER}/api/events`,
+            new Request( `${API_SERVER}/api/events/?trip_id=${trip_id}`,
             {
                 method: "GET",
                 headers: header,
@@ -14,6 +14,7 @@ export default {
     },
     create(token, values){
         const header = new Headers({'Authorization': `Token ${token}`, 'Content-Type': 'application/json'});
+        console.log("THE values....", values)
         return (
             new Request(`${API_SERVER}/api/events/`,
             {
