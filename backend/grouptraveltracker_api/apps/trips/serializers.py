@@ -1,7 +1,11 @@
+import os
 from rest_framework import serializers
+import requests
 from .models import Trip, CustomUser
 from ..events.models import Event
 from ..trip_members.models import TripMember
+from ..location.models import Location
+from ..location.serializers import InlineLocationSerializer
 import logging
 
 LOG = logging.getLogger(__name__)
@@ -19,6 +23,7 @@ class InlineEventSerializer(serializers.ModelSerializer):
     calendarId = serializers.SerializerMethodField('_going')
     category = serializers.CharField(default="time")
     isVisible = serializers.BooleanField(default=True)
+    location = InlineLocationSerializer(required=False, many=False, read_only=True)
 
     def _going(self, obj):
         request = self.context.get('request', None)
@@ -31,7 +36,7 @@ class InlineEventSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Event
-        fields = ("id", "title", "body", "start", "end", "attendees", "location", "calendarId", "category", "isVisible")
+        fields = ("id", "title", "body", "start", "end", "location", "attendees", "location", "calendarId", "category", "isVisible")
 
 
 class TripSerializer(serializers.ModelSerializer):
@@ -42,6 +47,7 @@ class TripSerializer(serializers.ModelSerializer):
     enddate = serializers.DateField(required=False, allow_null=True)
     members = InlineTripMemberSerializer(many=True, read_only=True)
     events = InlineEventSerializer(many=True, read_only=True)
+    location = InlineLocationSerializer(required=False, many=False, read_only=True)
     current_user = serializers.SerializerMethodField('_user')
     
     def _user(self, obj):
@@ -51,7 +57,7 @@ class TripSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Trip
-        fields = ("name", "id", "startdate", "enddate", "start_location", "summary", "budget", "classification", "owner", "members", "events", "current_user")
+        fields = ("name", "id", "startdate", "enddate", "location", "summary", "budget", "classification", "owner", "members", "events", "current_user")
 
 
 class TripWriteSerializer(serializers.ModelSerializer):
@@ -70,6 +76,7 @@ class TripWriteSerializer(serializers.ModelSerializer):
         required=False,
         allow_empty=True,
     )
+    location_string = serializers.CharField(max_length=60, required=False, allow_null=True)
 
     def validate(self, attrs: dict) -> dict:
         validated_data = super().validate(attrs)
@@ -78,15 +85,28 @@ class TripWriteSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         create_these_members = []
+        location_title = validated_data.get("location_string")
         name = validated_data["name"]
         validated_data["startdate"] = validated_data.get("startdate")
         validated_data["enddate"] = validated_data.get("enddate")
         start_location = validated_data.get("start_location")
         summary = validated_data.get("summary")
         budget = validated_data.get("budget")
-        display_names = validated_data.get("display_names")
+        display_names = validated_data.get("display_names", "")
         classification = validated_data.get("classification")
         owner_id = validated_data["owner_id"] = self.context['request'].user
+
+        if location_title:
+            validated_data.pop('location_string')
+            ## *****
+            #       TECH DEBT - need to move the api_key to .env
+            REACT_APP_geocode = 'AIzaSyAB4IhbKO9yAESB1YKKjg99lVm7cf7DjUk'
+            r = requests.get(f'https://maps.googleapis.com/maps/api/geocode/json?address={location_title}&key={REACT_APP_geocode}')
+            lat = r.json().get('results')[0].get('geometry').get('location').get('lat')
+            lng = r.json().get('results')[0].get('geometry').get('location').get('lng')
+
+            location = Location.objects.create(title=location_title, lat=lat, lng=lng)
+            validated_data["location"] = location
 
         trip = Trip.objects.create(**validated_data)
         create_these_members.append(TripMember(trip=trip, user=CustomUser.objects.get(id=owner_id)))

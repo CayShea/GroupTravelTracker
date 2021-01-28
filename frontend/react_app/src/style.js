@@ -143,10 +143,18 @@ const useStyles = makeStyles((theme) => ({
       height: 300,
     },
     fixedHeightPaper: {
-      height: 300,
       padding: theme.spacing(2),
       display: 'flex',
       flexDirection: 'column',
+      backgroundColor: "#D3D3D3"
+    },
+    itineraryRow: {
+      padding: theme.spacing(1),
+      display: "flex",
+      flexDirection: 'column',
+      justifyContent: 'space-around',
+      backgroundColor: "#ADD8E6",
+      marginBottom: theme.spacing(1),
     },
   }));
 

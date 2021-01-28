@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef, useEffect } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import moment from 'moment';
 import Container from '@material-ui/core/Container';
 import TUICalendar from '@toast-ui/react-calendar';
@@ -114,6 +114,7 @@ const Calendar = (props) => {
   const [ open, setOpen ] = useState(false);
   const  [ hasError, setErrors ] =  useState(false);
   const [ showCreateForm, setShowCreateForm ] = useState(true);
+  const [ showDetailPopup, setShowDetailPopup ] = useState(true);
   const [ schedules, setSchedules ] = useState([]);
   const [ currentEventId, setCurrentEventId ] = useState('');
   const [ tripTimezoneName, setTripTimezoneName ] = useState('Arizona Mountain Time');
@@ -125,6 +126,7 @@ const Calendar = (props) => {
     start: '',
     end: '',
     location: '',
+    location_string: '',
     attendees: [],
     isPrivate: false
   });
@@ -228,16 +230,30 @@ const Calendar = (props) => {
       bgColor: "#00a9ff",
       dragBgColor: "#00a9ff",
       borderColor: "#00a9ff"
+    },
+    {
+      id: "trip",
+      name: "Trip",
+      color: "#ffffff",
+      bgColor: "#FFFF99",
+      dragBgColor: "#FFFF99",
+      borderColor: "#FFFF99"
     }
   ];
 
   const handleChange = (prop) => (event) => {
+
+    console.log(" Updating this >>>>>", prop, event.target.value, newEvent)
     setNewEvent({ ...newEvent, [prop]: event.target.value });
   };
 
   const onClickSchedule = useCallback((e) => {
     const { calendarId, id } = e.schedule;
-    // const el = cal.current.calendarInst.getElement(id, calendarId);
+    if (calendarId === 'trip') {
+      setShowDetailPopup(false)
+    } else {
+      setShowDetailPopup(true)
+    }
   }, []);
 
   const onBeforeCreateSchedule = useCallback((scheduleData) => {
@@ -295,6 +311,9 @@ const Calendar = (props) => {
   };
   
   async function createOrEditEvent() {
+    newEvent['location_string'] = newEvent.location;
+    delete newEvent.location;
+    console.log("THE Event I am sending ? >>>>>", newEvent)
     try {
       const res = showCreateForm ? await fetch(api.events.create(props.token, newEvent)) : await fetch(api.events.edit(props.token, newEvent, currentEventId));
       res.json()
@@ -339,16 +358,42 @@ const Calendar = (props) => {
     calendarInstance.setDate(tripStartDate);
   }
   useEffect(() => {
-    setCalendarDate();;
+    setCalendarDate();
   }, []);
-  useEffect(() => {
-    if (props.tripDetails.events.length > 0) {
-      props.tripDetails.events.forEach(element => {
-        element.start = new Date(element.start.slice(0, -1));
-        element.end = new Date(element.end.slice(0, -1));
+  const updateEvents = (tripDetails) => {
+    let updatedEvents = [];
+    if (tripDetails.events.length > 0) {
+      updatedEvents = tripDetails.events.map(element => {
+        let originalObject = {...element};
+        originalObject.start = new Date(element.start.slice(0, -1));
+        originalObject.end = new Date(element.end.slice(0, -1));
+        if (element.location) {
+          originalObject.location = element.location.title;
+        }
+        return originalObject;
       })
     };
-    setSchedules(props.tripDetails.events);
+    // Need to add the whole trip as an event...
+    let tripAttendees = tripDetails.members.map((member) => {
+      return member.display_name
+    })
+    const tripEvent = {
+      'id': tripDetails.id,
+      'title': tripDetails.name,
+      'body': '',
+      'start': new Date(tripDetails.startdate),
+      'end': new Date(tripDetails.enddate),
+      'attendees': tripAttendees,
+      'calendarId': "trip",
+      'category': "time",
+      'isVisible': true,
+      'location': tripDetails.location.title,
+    };
+    updatedEvents.push(tripEvent);
+    setSchedules(updatedEvents);
+  }
+  useEffect(() => {
+    updateEvents(props.tripDetails);
   }, []);
 
   const thissetCalendarView = (e) => {
@@ -410,7 +455,7 @@ const Calendar = (props) => {
           // }}
           usageStatistics={false}
           useCreationPopup={false}
-          useDetailPopup={true}
+          useDetailPopup={showDetailPopup}
           calendars={calendars}
           schedules={schedules}
           onClickSchedule={onClickSchedule}
@@ -456,14 +501,14 @@ const Calendar = (props) => {
                         <BasicTimePicker 
                             label="Start"
                             value={newEvent.start}
-                            onChange={handleChange('start')}
+                            handleChange={handleChange('start')}
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <BasicTimePicker 
                             label="End"
                             value={newEvent.end}
-                            onChange={handleChange('end')}
+                            handleChange={handleChange('end')}
                         />
                     </Grid>
                     <Grid item sm={1}>

@@ -140,11 +140,12 @@ export default function SideBar(props){
                         { props.tripDetails.name && 
                             <TripForm reloadScreen={props.fetchData} token={props.token} create={false} icon='EditIcon' tripDetails={props.tripDetails}></TripForm>
                         }
+                        {/* NOTIFICATION ICON - for future release
                         <IconButton onClick={() => {alert("link to latest updates to trip by other Travelers")}} color="inherit">
                             <Badge badgeContent={4} color="secondary">
                             <NotificationsIcon />
                             </Badge>
-                        </IconButton>
+                        </IconButton> */}
                       </div>
                     ) : <div></div>
                   }
@@ -176,16 +177,16 @@ export default function SideBar(props){
                   </ListItemIcon>
                   <ListItemText primary="Calendar" />
                 </ListItem>
-            </List>
-            <Divider />
-            <List>
-              <ListItemText>Coming soon...</ListItemText>
-                <ListItem button disabled onClick={props.selectMap}>
+                <ListItem button onClick={props.selectMap}>
                   <ListItemIcon>
                     <MapIcon />
                   </ListItemIcon>
                   <ListItemText primary="Map" />
                 </ListItem>
+            </List>
+            <Divider />
+            <List>
+              <ListItemText>Coming soon...</ListItemText>
               <ListItem button disabled>
                 <ListItemIcon>
                     <LayersIcon />

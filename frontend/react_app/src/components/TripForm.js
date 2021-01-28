@@ -36,9 +36,9 @@ CreateTrip.defaultProps = {
     icon: 'AddCircleIcon',
     tripDetails: {
         name: '',
-        start_location: '',
+        location_string: '',
         summary: '',
-        budget: '',
+        budget: 0,
         classification: 'none',
         members: [],
         startdate: JSON.stringify(startOfToday()).substring(1, 11),
@@ -196,8 +196,8 @@ export default function CreateTrip(props) {
                             margin="dense"
                             id="location"
                             label="Location"
-                            value={values.start_location}
-                            onChange={handleChange('start_location')}
+                            value={values.location_string}
+                            onChange={handleChange('location_string')}
                             type="text"
                         />
                     </Grid>
