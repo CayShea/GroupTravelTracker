@@ -30,7 +30,7 @@ EventForm.defaultProps = {
 export default function EventForm (props) {
     const classes = useStyles();
     const [ newEvent, setNewEvent ] = useState(props.eventDetails);
-    console.log(" THE new EVENT .....", props.eventDetails);
+    const [ nameError, setNameError ] = useState(false);
 
     const handleChange = (prop) => (event) => {
         setNewEvent({ ...newEvent, [prop]: event.target.value });
@@ -38,7 +38,11 @@ export default function EventForm (props) {
     
     const handleSubmit = (e) => {
         e.preventDefault();
-        createOrEditEvent();
+        if (values['title'] == "") {
+            setNameError(true);
+        } else {
+            createOrEditEvent();
+        }
     };
 
     async function createOrEditEvent() {
@@ -65,17 +69,35 @@ export default function EventForm (props) {
                       <LocalOfferIcon color="disabled"/>
                     </Grid>
                     <Grid item sm={11}>
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            id="title"
-                            label="Event"
-                            value={newEvent.title}
-                            onChange={handleChange('title')}
-                            type="text"
-                            fullWidth
-                            required
-                        />
+                        { nameError ? 
+                            (
+                                <TextField
+                                    error
+                                    helperText="Required"
+                                    autoFocus
+                                    margin="dense"
+                                    id="title"
+                                    label="Event"
+                                    value={newEvent.title}
+                                    onChange={handleChange('title')}
+                                    type="text"
+                                    fullWidth
+                                    required
+                                />
+                            ) : (
+                                <TextField
+                                    autoFocus
+                                    margin="dense"
+                                    id="title"
+                                    label="Event"
+                                    value={newEvent.title}
+                                    onChange={handleChange('title')}
+                                    type="text"
+                                    fullWidth
+                                    required
+                                />
+                            ) 
+                        }
                     </Grid>
                     <Grid item sm={1}>
                       <RoomIcon color="disabled"/>
@@ -94,14 +116,14 @@ export default function EventForm (props) {
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <BasicTimePicker 
-                            label="Start"
+                            label="Start *"
                             value={newEvent.start}
                             onChange={handleChange('start')}
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <BasicTimePicker 
-                            label="End"
+                            label="End *"
                             value={newEvent.end}
                             onChange={handleChange('end')}
                         />

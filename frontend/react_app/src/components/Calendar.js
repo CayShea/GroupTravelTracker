@@ -114,6 +114,7 @@ const Calendar = (props) => {
   const [ open, setOpen ] = useState(false);
   const  [ hasError, setErrors ] =  useState(false);
   const [ showCreateForm, setShowCreateForm ] = useState(true);
+  const [ nameError, setNameError ] = useState(false);
   const [ showDetailPopup, setShowDetailPopup ] = useState(true);
   const [ schedules, setSchedules ] = useState([]);
   const [ currentEventId, setCurrentEventId ] = useState('');
@@ -242,8 +243,6 @@ const Calendar = (props) => {
   ];
 
   const handleChange = (prop) => (event) => {
-
-    console.log(" Updating this >>>>>", prop, event.target.value, newEvent)
     setNewEvent({ ...newEvent, [prop]: event.target.value });
   };
 
@@ -307,18 +306,22 @@ const Calendar = (props) => {
 
   const handleSubmit = (e) => {
       e.preventDefault();
-      createOrEditEvent();
+      if (newEvent['title'] == "") {
+          setNameError(true);
+      } else {
+          createOrEditEvent();
+      }
   };
   
   async function createOrEditEvent() {
     newEvent['location_string'] = newEvent.location;
     delete newEvent.location;
-    console.log("THE Event I am sending ? >>>>>", newEvent)
     try {
       const res = showCreateForm ? await fetch(api.events.create(props.token, newEvent)) : await fetch(api.events.edit(props.token, newEvent, currentEventId));
       res.json()
       .then(() => {
           props.refetchTrip();
+          props.refetchEvents();
           handleClose();
         }
       )
@@ -470,17 +473,35 @@ const Calendar = (props) => {
                       <LocalOfferIcon color="disabled"/>
                     </Grid>
                     <Grid item sm={11}>
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            id="title"
-                            label="Event"
-                            value={newEvent.title}
-                            onChange={handleChange('title')}
-                            type="text"
-                            fullWidth
-                            required
-                        />
+                        { nameError ? 
+                            (
+                                <TextField
+                                    error
+                                    helperText="Required"
+                                    autoFocus
+                                    margin="dense"
+                                    id="title"
+                                    label="Event"
+                                    value={newEvent.title}
+                                    onChange={handleChange('title')}
+                                    type="text"
+                                    fullWidth
+                                    required
+                                />
+                            ) : (
+                                <TextField
+                                    autoFocus
+                                    margin="dense"
+                                    id="title"
+                                    label="Event"
+                                    value={newEvent.title}
+                                    onChange={handleChange('title')}
+                                    type="text"
+                                    fullWidth
+                                    required
+                                />
+                            ) 
+                        }
                     </Grid>
                     <Grid item sm={1}>
                       <RoomIcon color="disabled"/>
@@ -499,14 +520,14 @@ const Calendar = (props) => {
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <BasicTimePicker 
-                            label="Start"
+                            label="Start *"
                             value={newEvent.start}
                             handleChange={handleChange('start')}
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <BasicTimePicker 
-                            label="End"
+                            label="End *"
                             value={newEvent.end}
                             handleChange={handleChange('end')}
                         />

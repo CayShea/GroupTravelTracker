@@ -48,12 +48,13 @@ const EventRow = (props) => {
     )
 }
 
-function Itinerary(props) {
+function ItineraryOverview(props) {
     const events = props.events;
     const firstEventIndex = props.firstEventIndex;
     const todayEventsArray = props.todayEventsArray;
     const rows = [];
-    const lastIndex = (props.events.length - 1);
+
+    const lastIndex = events[firstEventIndex + 5] ? firstEventIndex + 5 : (events.length - 1);
 
     if (props.withinRangeOfToday) {
         const remainderEventRowIndexes = (lastIndex - firstEventIndex + 1) - todayEventsArray.length;
@@ -67,7 +68,7 @@ function Itinerary(props) {
         };
     
     } else {
-        for (let i = firstEventIndex; i <= lastIndex; i++) {
+        for (let i = firstEventIndex; i < lastIndex; i++) {
             let value = events[i];
             rows.push(<EventRow title={value.title} start={value.start} key={i} isToday={false}/>)
         };
@@ -84,4 +85,4 @@ function Itinerary(props) {
     )
 }
 
-export default Itinerary;
+export default ItineraryOverview;

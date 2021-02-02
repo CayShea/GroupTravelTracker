@@ -122,11 +122,11 @@ export default function SideBar(props){
             <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
               <Toolbar className={classes.toolbar}>
                   <IconButton
-                  edge="start"
-                  color="inherit"
-                  aria-label="open drawer"
-                  onClick={handleDrawerOpen}
-                  className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
+                    edge="start"
+                    color="inherit"
+                    aria-label="open drawer"
+                    onClick={handleDrawerOpen}
+                    className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
                   >
                     <MenuIcon />
                   </IconButton>
@@ -183,16 +183,16 @@ export default function SideBar(props){
                   </ListItemIcon>
                   <ListItemText primary="Map" />
                 </ListItem>
+                <ListItem button onClick={props.selectItinerary}>
+                  <ListItemIcon>
+                      <LayersIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Itinerary" />
+                </ListItem>
             </List>
             <Divider />
             <List>
               <ListItemText>Coming soon...</ListItemText>
-              <ListItem button disabled>
-                <ListItemIcon>
-                    <LayersIcon />
-                </ListItemIcon>
-                <ListItemText primary="Itinerary" />
-              </ListItem>
               {/* <ListItem button disabled>
                 <ListItemIcon>
                     <PeopleIcon />
