@@ -49,9 +49,11 @@ CreateTrip.defaultProps = {
 export default function CreateTrip(props) {
   const classes = useStyles();
   const members = props.tripDetails.members;
-  const [open, setOpen] = useState(false);
-  const  [ hasError, setErrors ] =  useState(false);
-  const [values, setValues] = useState(props.tripDetails);
+  const [ open, setOpen ] = useState(false);
+  const  [ hasError, setError ] =  useState(false);
+  const [ values, setValues ] = useState(props.tripDetails);
+  const [ locationError, setLocationError ] = useState(false);
+  const [ nameError, setNameError ] = useState(false);
   const [ currentMembers, setCurrentMembers ] = useState(members);
   const  [ users, setUsers ]= useState([]);
 
@@ -69,7 +71,7 @@ export default function CreateTrip(props) {
         }
         setUsers(allUsers);
     })
-    .catch(err => setErrors(err));
+    .catch(err => setError(err));
   };
   useEffect(() => {
     fetchData();
@@ -97,7 +99,12 @@ export default function CreateTrip(props) {
 
   const handleSubmit = (e) => {
       e.preventDefault();
-      props.create ? createTrip() : updateTrip();
+      if (values['name'] == "" || values['start_location' == ""]) {
+          setNameError(true);
+          setLocationError(true);
+      } else {
+        props.create ? createTrip() : updateTrip();
+      }
   };
 
   async function createTrip() {
@@ -110,7 +117,7 @@ export default function CreateTrip(props) {
         }
         )
       } catch (err) {
-        setErrors(err)
+        setError(err)
       }
   };
 
@@ -125,7 +132,7 @@ export default function CreateTrip(props) {
             props.reloadScreen();
         }
     )} catch (err) {
-        setErrors(err);
+        setError(err);
   }};
 
   async function updateTripMembers() {
@@ -138,7 +145,7 @@ export default function CreateTrip(props) {
                 console.log(res)
             })
         } catch (err) {
-            setErrors(err);
+            setError(err);
         }
     }
   };
@@ -164,42 +171,75 @@ export default function CreateTrip(props) {
             <DialogContent>
                 <Grid container spacing={3}>
                     <Grid item sm={12}>
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            id="name"
-                            label="Trip Name"
-                            value={values.name}
-                            onChange={handleChange('name')}
-                            type="text"
-                            fullWidth
-                            required
-                        />
+                        {
+                            nameError ? (
+                                <TextField
+                                    error
+                                    helperText="Required"
+                                    id="name"
+                                    label="Trip Name"
+                                    value={values.name}
+                                    onChange={handleChange('name')}
+                                    type="text"
+                                    fullWidth
+                                    required
+                                />
+                            ) : (
+                                <TextField
+                                    margin="dense"
+                                    id="name"
+                                    label="Trip Name"
+                                    value={values.name}
+                                    onChange={handleChange('name')}
+                                    type="text"
+                                    fullWidth
+                                    required
+                                />
+                            )
+                        }
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <BasicDatePicker 
-                            label="Start Date"
+                            label="Start Date *"
                             value={values.startdate}
                             onChange={handleStartDateChange}
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <BasicDatePicker 
-                            label="End Date"
+                            label="End Date *"
                             value={values.enddate}
                             onChange={handleEndDateChange}
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            id="location"
-                            label="Location"
-                            value={values.location_string}
-                            onChange={handleChange('location_string')}
-                            type="text"
-                        />
+                        { locationError ? 
+                            (
+                                <TextField
+                                    error
+                                    helperText="Required"
+                                    autoFocus
+                                    margin="dense"
+                                    id="location"
+                                    label="Location"
+                                    value={values.location_string}
+                                    onChange={handleChange('location_string')}
+                                    type="text"
+                                    required
+                                />
+                            ) : (
+                                <TextField
+                                    autoFocus
+                                    margin="dense"
+                                    id="location"
+                                    label="Location"
+                                    value={values.location_string}
+                                    onChange={handleChange('location_string')}
+                                    type="text"
+                                    required
+                                />
+                            )
+                        }
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <FormControl className={classes.margin} variant="outlined">

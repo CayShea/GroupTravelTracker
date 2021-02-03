@@ -28,7 +28,7 @@ class EventWriteSerializer(serializers.ModelSerializer):
     start = serializers.DateTimeField(required=True)
     end = serializers.DateTimeField(required=True)
     title = serializers.CharField(max_length=64)
-    location_string = serializers.CharField(max_length=60, required=False, allow_null=True)
+    location_string = serializers.CharField(allow_blank=True)
     isPrivate = serializers.BooleanField(default=False)
 
     class Meta:
@@ -57,7 +57,6 @@ class EventWriteSerializer(serializers.ModelSerializer):
             validated_data['attendees'] = [current_user]
             
             if location_title:
-                validated_data.pop('location_string')
                 ## *****
                 #       TECH DEBT - need to move the api_key to .env
                 REACT_APP_geocode = 'AIzaSyAB4IhbKO9yAESB1YKKjg99lVm7cf7DjUk'
@@ -67,6 +66,8 @@ class EventWriteSerializer(serializers.ModelSerializer):
 
                 location = Location.objects.create(title=location_title, lat=lat, lng=lng)
                 validated_data["location"] = location
+            
+            validated_data.pop('location_string')
 
             event = Event.objects.create(**validated_data)
             return event
@@ -105,4 +106,4 @@ class EventSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Event
-        fields = ("id", "title", "body", "start", "end", "location", "trip", "attendees", "calendarId", "location", "isPrivate", "current_user")
+        fields = ("id", "title", "body", "start", "end", "trip", "attendees", "calendarId", "location", "isPrivate", "current_user")

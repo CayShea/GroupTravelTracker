@@ -17,8 +17,6 @@ export default function TripSummary(props) {
   const theme = useTheme();
   const classes = useStyles();
 
-  console.log(" TRIP details >>>", props.trip)
-
   const tripDetails = {
     "Location": props.trip.location ? props.trip.location.title : '--',
     "Dates": props.trip.startdate ? `${props.trip.startdate} to ${props.trip.enddate}` : '--',

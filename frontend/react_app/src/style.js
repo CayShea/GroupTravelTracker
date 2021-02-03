@@ -106,6 +106,10 @@ const useStyles = makeStyles((theme) => ({
     menuButtonHidden: {
       display: 'none',
     },
+    whiteButton: {
+      color: '#ffffff',
+      // "&:hover, &.Mui-focusVisible": { backgroundColor: "#D3D3D3" }
+    },
     drawerPaper: {
       position: 'relative',
       whiteSpace: 'nowrap',
@@ -142,7 +146,16 @@ const useStyles = makeStyles((theme) => ({
     fixedHeight: {
       height: 300,
     },
-    fixedHeightPaper: {
+    fixedHeightPaperCenterAlign: {
+      padding: theme.spacing(2),
+      display: 'flex',
+      alignContent: 'center',
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexDirection: 'column',
+      backgroundColor: "#D3D3D3"
+    },
+    fixedHeightPaperLeftAlign: {
       padding: theme.spacing(2),
       display: 'flex',
       flexDirection: 'column',
@@ -154,6 +167,14 @@ const useStyles = makeStyles((theme) => ({
       flexDirection: 'column',
       justifyContent: 'space-around',
       backgroundColor: "#ADD8E6",
+      marginBottom: theme.spacing(1),
+    },
+    itineraryRowToday: {
+      padding: theme.spacing(1),
+      display: "flex",
+      flexDirection: 'column',
+      justifyContent: 'space-around',
+      backgroundColor: "#FFFF99",
       marginBottom: theme.spacing(1),
     },
   }));
