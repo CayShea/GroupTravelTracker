@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -14,27 +14,42 @@ import { useHistory, useLocation } from 'react-router-dom';
 import * as actions from '../store/authActions';
 import useStyles from '../style';
 import ConfirmEmailModel from '../components/modals/ConfirmEmailModal';
+// import AvatarUpload from '../components/AvatarUpload';
 
 
 function SignUp(props) {
   const classes = useStyles();
-  const [email, setEmail] = React.useState(null);
-  const [password, setPassword] = React.useState(null);
-  const [displayName, setDisplayName] = React.useState(null);
-  const [open, setOpen] = React.useState(false);
+  const [email, setEmail] = useState(null);
+  const [password1, setPassword1] = useState(null);
+  const [password2, setPassword2] = useState(null);
+  const [displayName, setDisplayName] = useState(null);
+  const [ formSubmitted, setFormSubmitted ] = useState(false);
+  const [ fieldError, setFieldError ] = useState(false);
+  const [open, setOpen] = useState(false);
 
   let history = useHistory();
   let location = useLocation();
   let { from } = location.state || { from: { pathname: "/" } }
 
-  React.useEffect(() => {
-    if (props.isAuthenticated) { history.replace(from) }
+  useEffect(() => {
+    if (formSubmitted && !props.error) {
+      setOpen(true) 
+    };
+  });
+
+  useEffect(() => {
+    if (props.error) {
+      console.log("THERE was some sort of error ?? >>>", props.error)
+      setFieldError(true);
+      setFormSubmitted(false);
+    };
   });
 
   const handleFormFieldChange = (event) => {
     switch(event.target.id) {
       case 'email': setEmail(event.target.value); break;
-      case 'password': setPassword(event.target.value); break;
+      case 'password1': setPassword1(event.target.value); break;
+      case 'password2': setPassword2(event.target.value); break;
       case 'displayName': setDisplayName(event.target.value); break;
       default: return null;
     }
@@ -42,8 +57,15 @@ function SignUp(props) {
 
  const handleSubmit = (e) => {
   e.preventDefault();
-  props.onAuth(email, password, displayName);
-  setOpen(true);
+  // let formData = new FormData();
+  // formData.append("email", email);
+  // formData.append('password1', password1)
+  // formData.append('password2', password2)
+  // formData.append('display_name', displayName)
+  // props.onAuth(formData);
+
+  props.onAuth(email, password1, password2, displayName);
+  setFormSubmitted(true);
  };
 
  const handleClose = () => {
@@ -62,51 +84,136 @@ function SignUp(props) {
           Sign up
         </Typography>
         <form className={classes.form} noValidate onSubmit={handleSubmit}>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <TextField
-                name="displayName"
-                variant="outlined"
-                required
-                fullWidth
-                id="displayName"
-                label="Display Name"
-                autoFocus
-                onChange={handleFormFieldChange}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-                onChange={handleFormFieldChange}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-                onChange={handleFormFieldChange}
-              />
-            </Grid>
-            {/* <Grid item xs={12}>
-              <FormControlLabel
-                control={<Checkbox value="allowExtraEmails" color="primary" />}
-                label="I want to receive inspiration, marketing promotions and updates via email."
-              />
-            </Grid> */}
-          </Grid>
+        {/* //  enctype="multipart/form-data"> */}
+          { fieldError ? 
+            (
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <TextField
+                    error
+                    helperText="Required"
+                    name="displayName"
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="displayName"
+                    label="Display Name"
+                    autoFocus
+                    onChange={handleFormFieldChange}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    error
+                    helperText="Required"
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="email"
+                    label="Email Address"
+                    name="email"
+                    autoComplete="email"
+                    onChange={handleFormFieldChange}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    error
+                    helperText="Required"
+                    variant="outlined"
+                    required
+                    fullWidth
+                    name="password1"
+                    label="Password"
+                    type="password"
+                    id="password1"
+                    onChange={handleFormFieldChange}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    error
+                    helperText="Passwords must match and be longer than 8 characters."
+                    variant="outlined"
+                    required
+                    fullWidth
+                    name="password2"
+                    label="Password"
+                    type="password"
+                    id="password2"
+                    onChange={handleFormFieldChange}
+                  />
+                </Grid>
+              </Grid>
+            ) : (
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <TextField
+                    name="displayName"
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="displayName"
+                    label="Display Name"
+                    autoFocus
+                    onChange={handleFormFieldChange}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="email"
+                    label="Email Address"
+                    name="email"
+                    autoComplete="email"
+                    onChange={handleFormFieldChange}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    name="password1"
+                    label="Password"
+                    type="password"
+                    id="password1"
+                    onChange={handleFormFieldChange}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    helperText="* Password must be longer than 8 characters."
+                    name="password2"
+                    label="Enter Password again"
+                    type="password"
+                    id="password2"
+                    onChange={handleFormFieldChange}
+                  />
+                </Grid>
+                {/* <Grid item xs={12}>
+                  <div className={classes.uploadRow}>
+                    <Typography className={classes.ternaryTitle} variant="p">
+                      Profile Photo
+                    </Typography>
+                    <AvatarUpload uploadAvatar={uploadAvatar}/>
+                  </div>
+                </Grid> */}
+
+                {/* <Grid item xs={12}>
+                  <FormControlLabel
+                    control={<Checkbox value="allowExtraEmails" color="primary" />}
+                    label="I want to receive inspiration, marketing promotions and updates via email."
+                  />
+                </Grid> */}
+              </Grid>
+            )
+          }
           <Button
             type="submit"
             fullWidth
@@ -135,7 +242,7 @@ function SignUp(props) {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onAuth: (email, password, displayName) => dispatch(actions.authSignup(email, password, displayName))
+    onAuth: (email, password1, password2, displayName) => dispatch(actions.authSignup(email, password1, password2, displayName))
   }
 }
 

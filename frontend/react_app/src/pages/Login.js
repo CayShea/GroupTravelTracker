@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -19,14 +19,19 @@ import useStyles from '../style';
 
 function Login(props) {
   const classes = useStyles();
-  const [email, setEmail] = React.useState(null);
-  const [password, setPassword] = React.useState(null);
+  const [email, setEmail] = useState(null);
+  const [password, setPassword] = useState(null);
+  const [formError, setFormError] = useState(false);
   let history = useHistory();
   let location = useLocation();
   let { from } = location.state || { from: { pathname:"/" } }
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (props.isAuthenticated) { history.replace(from) }
+  });
+
+  useEffect(() => {
+    if (props.error) { setFormError(true) };
   });
 
   const handleFormFieldChange = (event) => {
@@ -53,30 +58,67 @@ function Login(props) {
           Sign in
         </Typography>
         <form className={classes.form} noValidate onSubmit={handleSubmit}>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            autoFocus
-            onChange={handleFormFieldChange}
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-            onChange={handleFormFieldChange}
-          />
+          { formError ? 
+            (
+              <div>
+                <TextField
+                  error
+                  helperText="Email and/or Password incorrect."
+                  variant="outlined"
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  name="email"
+                  autoComplete="email"
+                  autoFocus
+                  onChange={handleFormFieldChange}
+                />
+                <TextField
+                  error
+                  helperText="Email and/or Password incorrect."
+                  variant="outlined"
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                  autoComplete="current-password"
+                  onChange={handleFormFieldChange}
+                />
+              </div>
+            ): (
+              <div>
+                <TextField
+                  variant="outlined"
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  name="email"
+                  autoComplete="email"
+                  autoFocus
+                  onChange={handleFormFieldChange}
+                />
+                <TextField
+                  variant="outlined"
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                  autoComplete="current-password"
+                  onChange={handleFormFieldChange}
+                />
+              </div>
+            )
+          }
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"

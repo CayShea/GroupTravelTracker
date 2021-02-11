@@ -72,8 +72,8 @@ export default function Header(props) {
                 open={open}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>My account</MenuItem>
+                <MenuItem onClick={() => history.push(`/profile/`)}>Profile</MenuItem>
+                {/* <MenuItem onClick={handleClose}>My account</MenuItem> */}
               </Menu>
             </div>
           )}
