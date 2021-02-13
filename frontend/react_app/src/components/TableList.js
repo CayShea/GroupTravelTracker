@@ -197,7 +197,7 @@ export default function TableList(props) {
                                     </TableCell>
                                     <TableCell component="th" scope="row" onClick={() => {history.push(`/trips/${row.id}`)}}>{row.name}</TableCell>
                                     <TableCell align="left">{row.startdate}</TableCell>
-                                    <TableCell align="left">{row.start_location}</TableCell>
+                                    <TableCell align="left">{row.location.title}</TableCell>
                                     <TableCell align="left">{row.budget}</TableCell>
                                     <TableCell align="left">{row.classification === 'none' ?  '--' : row.classification}</TableCell>
                                 </TableRow>

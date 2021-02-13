@@ -20,6 +20,7 @@ function App(props) {
 const mapStateToProps = (state) => {
   return {
     isAuthenticated: state.auth.token !== null && typeof state.auth.token !== 'undefined',
+    error: state.auth.error,
     token: state.auth.token
   }
 }

@@ -9,9 +9,11 @@ import Paper from '@material-ui/core/Paper';
 
 const MapScreen = (props) => {
   const classes = useStyles();
+  const bounds = new props.google.maps.LatLngBounds();
   const [ showingInfoWindow, setShowingInfoWindow ] = useState(false);
   const [selectedCenter, setSelectedCenter] = useState(null);
   const [ selectedDate, setSelectedDate ] = useState('');
+  const google = props.google;
 
   // const onMapClick = () => {
   //   alert("navigate to the Map Screen")
@@ -28,23 +30,26 @@ const MapScreen = (props) => {
     return timeToFormat;
   };
 
-  const setDateFormatForSelected = (event) => {
-    const setDate = event.start.slice(5, 10);
-    const startTime = formatHour(event.start.slice(11, 16));
-    const endTime = formatHour(event.end.slice(11, 16));
-    const endDate = event.end.slice(5, 10);
-    let differentEndDate = '';
-    if (setDate !== endDate) {
-      differentEndDate = endDate;
-    }
+    const setDateFormatForSelected = (event) => {
+      const setDate = event.start.slice(5, 10);
+      const startTime = formatHour(event.start.slice(11, 16));
+      const endTime = formatHour(event.end.slice(11, 16));
+      const endDate = event.end.slice(5, 10);
+      let differentEndDate = '';
+      if (setDate !== endDate) {
+        differentEndDate = endDate;
+      }
 
     const newString = `${setDate} from ${startTime} to ${differentEndDate} ${endTime}`;
-    setSelectedDate(newString);
-  };
+      setSelectedDate(newString);
+    };
 
-    const eventsWithLocation = props.events.filter(element => 
-      element.location
-    );
+    for (var i = 0; i < props.eventsWithLocation.length; i++) {
+      let points = {};
+      points.lat = Number(props.eventsWithLocation[i].location.lat);
+      points.lng = Number(props.eventsWithLocation[i].location.lng);
+      bounds.extend(points);
+    }
 
     return (
         <div className={classes.secondaryRoot}>
@@ -52,14 +57,20 @@ const MapScreen = (props) => {
               <Map
                   item
                   xs = { 12 }
-                  style={{ width: '80%', height: '80%', left: 0, top: 0, position: 'relative'}}
+                  style={{ width: '80%', height: '80%', left: -20, top: 0, position: 'relative'}}
                   google = { props.google }
                   initialCenter = {{ lat: props.location.lat, lng: props.location.lng}}
+                  bounds={bounds}
               >
-                { eventsWithLocation ? 
-                  ( eventsWithLocation.map(element => (         
+                { props.eventsWithLocation ? 
+                  ( props.eventsWithLocation.map(element => (       
                       <Marker                 
                         key={element.id}
+                        icon={{
+                          url: element.orderOfEvent,
+                          anchor: new google.maps.Point(32,32),
+                          scaledSize: new google.maps.Size(37,37)
+                        }}
                         position={{
                             lat: Number(element.location.lat),
                             lng: Number(element.location.lng)  
@@ -69,7 +80,10 @@ const MapScreen = (props) => {
                           setDateFormatForSelected(element);
                           setShowingInfoWindow(true);
                         }}
+                        // onClick={() => {alert("Direction to here")}}
                       />
+                      // add polyline?...
+                      // for react native display, add Directions
                   ))) : (<div></div>)
                 }
                 {selectedCenter && (
@@ -107,7 +121,7 @@ MapScreen.propTypes = {
     location: PropTypes.object
   }
   MapScreen.defaultProps = {
-    zoom: 18,
+    zoom: 16,
     location: {
       title: 'Phoenix, AZ',
       lat: 33.4484,

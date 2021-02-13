@@ -11,23 +11,20 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
-
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+import os
+from dotenv import load_dotenv
+load_dotenv()
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'bgoe5r&m9^^kykixv)(m30h22#o6c%-2krqw&ogu!gk%6nbq80'
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+
 ALLOWED_HOSTS = []
-
-
 REQUIRED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -59,7 +56,7 @@ INSTALLED_APPS = TRAVEL_TRACKER_APPS + REQUIRED_APPS
 
 
 AUTH_USER_MODEL = 'users.CustomUser'
-ACCOUNT_ADAPTER = 'apps.users.adapters.CustomUserAccountAdapter'
+# ACCOUNT_ADAPTER = 'apps.users.adapters.CustomUserAccountAdapter'
 REST_AUTH_SERIALIZERS = {
     'USER_DETAILS_SERIALIZER': 'apps.users.serializers.UserSerializer',
 }
@@ -130,11 +127,19 @@ ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = '/?verification=1'
 ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = '/?verification=1'
 ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 5
+ACCOUNT_LOGOUT_REDIRECT_URL ='/login/' 
 LOGIN_REDIRECT_URL = "/"
-ACCOUNT_LOGOUT_REDIRECT_URL ='/accounts/login/'
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = DEFAULT_FROM_EMAIL = 'cayleesheaharrington@gmail.com'
+EMAIL_HOST_PASSWORD = 'She1201615003!'
+EMAIL_SUBJECT_PREFIX = 'Group Travel Tracker - Confirm your email'
 
 SITE_ID = 2
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
 #tech-debt- set up email verification
 # sending the email verification message upon user registration with verification link
@@ -143,6 +148,11 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # (to send actual emails you must set up Simple Mail Transfer Protocol, 
 # simplest way to do this is by using one of the SMTP service providers 
 # like Amazon SES)
+
+
+# Images
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 
 
 # Database

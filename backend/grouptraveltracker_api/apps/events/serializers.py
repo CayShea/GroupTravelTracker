@@ -1,4 +1,7 @@
 import logging
+import os
+from dotenv import load_dotenv
+load_dotenv()
 import uuid
 import shortuuid
 import requests
@@ -55,11 +58,9 @@ class EventWriteSerializer(serializers.ModelSerializer):
             location_title = validated_data.get("location_string")
             current_user = self.context.get('request').user.display_name
             validated_data['attendees'] = [current_user]
+            REACT_APP_geocode = os.getenv('REACT_APP_geocode')
             
             if location_title:
-                ## *****
-                #       TECH DEBT - need to move the api_key to .env
-                REACT_APP_geocode = 'AIzaSyAB4IhbKO9yAESB1YKKjg99lVm7cf7DjUk'
                 r = requests.get(f'https://maps.googleapis.com/maps/api/geocode/json?address={location_title}&key={REACT_APP_geocode}')
                 lat = r.json().get('results')[0].get('geometry').get('location').get('lat')
                 lng = r.json().get('results')[0].get('geometry').get('location').get('lng')
@@ -74,6 +75,17 @@ class EventWriteSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         with transaction.atomic():
+            REACT_APP_geocode = os.getenv('REACT_APP_geocode')
+            location_title = validated_data.get("location_string")
+            if location_title is not instance.location.title:
+                r = requests.get(f'https://maps.googleapis.com/maps/api/geocode/json?address={location_title}&key={REACT_APP_geocode}')
+                lat = r.json().get('results')[0].get('geometry').get('location').get('lat')
+                lng = r.json().get('results')[0].get('geometry').get('location').get('lng')
+
+                Location.objects.filter(id=instance.location.id).delete()
+                location = Location.objects.create(title=location_title, lat=lat, lng=lng)
+                validated_data["location"] = location
+
             event_data = dict(validated_data)
             event = super().update(instance, event_data)
             return event

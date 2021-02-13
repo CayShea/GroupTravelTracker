@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
       marginBottom: '10px'
     },
     submit: {
-      margin: theme.spacing(3, 0, 2),
+      margin: theme.spacing(4, 0, 2),
     },
     table: {
       minWidth: 700,
@@ -71,6 +71,9 @@ const useStyles = makeStyles((theme) => ({
     },
     secondaryTitle: {
       flexGrow: 1
+    },
+    ternaryTitle: {
+      fontSize: 16
     },
     toolbar: {
       paddingRight: 24, // keep right padding when drawer closed
@@ -176,6 +179,16 @@ const useStyles = makeStyles((theme) => ({
       justifyContent: 'space-around',
       backgroundColor: "#FFFF99",
       marginBottom: theme.spacing(1),
+    },
+    avatarImage: {
+      height: '100px',
+      width: '100px',
+    },
+    uploadRow: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      paddingLeft: '6px',
+      marginLeft: '7px'
     },
   }));
 
