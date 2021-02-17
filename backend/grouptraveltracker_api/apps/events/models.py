@@ -12,6 +12,6 @@ class Event(models.Model):
     start = models.DateTimeField(null=True, blank=True)
     end = models.DateTimeField(null=True, blank=True)
     trip = models.ForeignKey(Trip, on_delete=models.CASCADE, related_name="events")
-    attendees = ArrayField(models.CharField(max_length=100), blank=True, null=True)
+    attendees = ArrayField(models.CharField(max_length=100, blank=True, null=True), default=list)
     location = models.OneToOneField(Location, on_delete=models.CASCADE, related_name="events", blank=True, null=True)
     isPrivate = models.BooleanField(default=False)
