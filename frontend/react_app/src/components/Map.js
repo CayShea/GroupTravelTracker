@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Container from '@material-ui/core/Container';
 
 import useStyles from '../style';

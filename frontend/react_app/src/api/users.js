@@ -11,5 +11,16 @@ export default {
                 headers: header,
             }
         ))
-    }
+    },
+    edit(token, values){
+        const header = new Headers({'Authorization': `Token ${token}`});
+        return (
+            new Request(`${API_SERVER}/rest-auth/user/`,
+            {
+                method: "PATCH",
+                headers: header,
+                body: values
+            }
+        ))
+    },
 }
