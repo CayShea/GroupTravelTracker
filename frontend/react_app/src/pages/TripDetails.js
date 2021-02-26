@@ -73,6 +73,8 @@ export default function TripDetails(props) {
     const [ withinRangeOfToday, setWithinRangeOfToday ] = useState(false);
     const [ todayEventsArray, setTodayEventsArray ] = useState([]);
     const [ firstEventIndex, setFirstEventIndex ] = useState(null);
+    const [ defaultStartEventTime, setDefaultStartEventTime ] = useState('');
+    const [ defaultEndEventTime, setDefaultEndEventTime ] = useState('');
 
     const numberIconsArray = [
       one, two, three, four, five, six, seven, eight, nine, ten, eleven, twelve, thirteen, fourteen, fifteen, sixteen, seventeen, eighteen, nineteen, twenty, twentyone, twentytwo, twentythree, twentyfour, twentyfive, twentysix, twentyseven, twentyeight, twentynine, thirty, thirtyone, thirtytwo, thirtythree, thirtyfour, thirtyfive, thirtysix, thirtyseven, thirtyeight, thirtynine, forty, fortyone, fortytwo, fortythree, fortyfour, fortyfive, fortysix, fortyseven, fortyeight, fortynine, fifty
@@ -99,7 +101,9 @@ export default function TripDetails(props) {
       const res = await fetch(api.trips.detail(props.token, id));
       res.json()
       .then(res => {
-        setTripDetails(res);
+        setTripDetails(res);   
+        setDefaultStartEventTime(new Date(new Date(res.startdate).toLocaleString()).toISOString().slice(0, -8));
+        setDefaultEndEventTime(new Date(new Date(res.enddate).toLocaleString()).toISOString().slice(0, -8))
       })
       .catch(err => setErrors(err));
     };
@@ -194,6 +198,8 @@ export default function TripDetails(props) {
               refetchTrip={fetchTrip}
               refetchEvents={fetchEvents}
               token={props.token}
+              defaultStartEventTime={defaultStartEventTime}
+              defaultEndEventTime={defaultEndEventTime}
             ></Dashboard>
           );
       }

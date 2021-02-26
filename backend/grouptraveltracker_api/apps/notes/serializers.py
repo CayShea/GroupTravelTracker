@@ -3,7 +3,7 @@ from django.db import transaction
 import shortuuid
 import logging
 import requests
-from .models import Traveldocs
+from .models import Note
 from ..users.models import CustomUser
 from ..trips.models import Trip
 from ..events.models import Event
@@ -11,23 +11,22 @@ from ..events.models import Event
 
 LOG = logging.getLogger(__name__)
 
-class TraveldocsWriteSerializer(serializers.ModelSerializer):
-    owner_id = serializers.PrimaryKeyRelatedField(
+class NotesWriteSerializer(serializers.ModelSerializer):
+    author_id = serializers.PrimaryKeyRelatedField(
         queryset=CustomUser.objects.all(),
         pk_field=serializers.UUIDField(format="hex_verbose"),
         write_only=True,
         required=False,
-        source="owner",
+        source="author",
     )
     trip_id = serializers.CharField(max_length=255, required=False)
     event_id = serializers.CharField(max_length=255, required=False)
     isprivate = serializers.BooleanField(default=False)
-    name = serializers.CharField(allow_blank=True, required=False)
-    note = serializers.CharField(allow_blank=True, required=False)
-    filepath = serializers.FileField()
+    title = serializers.CharField(allow_blank=True, required=False)
+    body = serializers.CharField(allow_blank=True, required=False)
 
     class Meta:
-        model = Traveldocs
+        model = Note
         exclude = ('trip', 'event')
 
     def validate(self, attrs):
@@ -48,21 +47,21 @@ class TraveldocsWriteSerializer(serializers.ModelSerializer):
     
     def create(self, validated_data):
         with transaction.atomic():
-            validated_data["owner_id"] = self.context['request'].user
+            validated_data["author_id"] = self.context['request'].user
 
-            traveldoc = Traveldocs.objects.create(**validated_data)
-            return traveldoc
+            note = Note.objects.create(**validated_data)
+            return note
 
 
-class TraveldocsSerializer(serializers.ModelSerializer):
-    owner = serializers.CharField(source="owner.display_name", read_only=True)
+class NotesSerializer(serializers.ModelSerializer):
+    author = serializers.CharField(source="author.display_name", read_only=True)
 
     class Meta:
-        model = Traveldocs
+        model = Note
         fields = '__all__'
 
 
 class InlineDocsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Traveldocs
-        fields = ("id", "name", "event", "note", "filepath", "isprivate",)
+        model = Note
+        fields = ("id", "title", "event", "body", "isprivate",)

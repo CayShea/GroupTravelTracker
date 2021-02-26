@@ -27,6 +27,7 @@ urlpatterns = [
     path('api/', include('apps.events.urls')),
     path('api/', include('apps.users.urls')),
     path('api/', include('apps.traveldocs.urls')),
+    path('api/', include('apps.notes.urls')),
     path('registration/', include('rest_auth.registration.urls')),
     path('rest-auth/', include('rest_auth.urls')),
     path('registration/account-confirm-email/(?P<key>.+)/$', confirm_email, name='account_confirm_email'),

@@ -104,6 +104,8 @@ export default function Dashboard(props) {
                 token={props.token}
                 trip={props.tripDetails}
                 refetchEvents={props.refetchEvents}
+                defaultStartEventTime={props.defaultStartEventTime}
+                defaultEndEventTime={props.defaultEndEventTime}
             />
         </Container>
     )

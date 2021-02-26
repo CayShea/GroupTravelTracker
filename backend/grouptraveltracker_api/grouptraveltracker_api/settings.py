@@ -51,6 +51,7 @@ TRAVEL_TRACKER_APPS = [
     'apps.events.apps.EventsConfig',
     'apps.location.apps.LocationConfig',
     'apps.traveldocs.apps.TraveldocsConfig',
+    'apps.notes.apps.NotesConfig',
 ]
 
 INSTALLED_APPS = TRAVEL_TRACKER_APPS + REQUIRED_APPS
