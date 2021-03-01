@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -17,27 +17,20 @@ import api from '../api';
 
 EventForm.propTypes = {
     token: PropTypes.string,
+    refetchTrip: PropTypes.func,
+    showCreateForm: PropTypes.bool,
+    eventDetails: PropTypes.object,
     open: PropTypes.bool,
     handleClose: PropTypes.func,
-    // refetchTrip: PropTypes.func,
-    // showCreateForm: PropTypes.bool,
-    // eventDetails: PropTypes.object,
+};
+EventForm.defaultProps = {
+    showCreateForm: true,
 };
 
 export default function EventForm (props) {
     const classes = useStyles();
+    const [ newEvent, setNewEvent ] = useState(props.eventDetails);
     const [ nameError, setNameError ] = useState(false);
-    const [ newEvent, setNewEvent ] = useState({
-        trip_id: props.trip.id,
-        title: '',
-        body: '',
-        start: props.defaultStartEventTime,
-        end: props.defaultEndEventTime,
-        location: '',
-        location_string: '',
-        attendees: [],
-        isPrivate: false
-    });
 
     const handleChange = (prop) => (event) => {
         setNewEvent({ ...newEvent, [prop]: event.target.value });
@@ -45,7 +38,7 @@ export default function EventForm (props) {
     
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (newEvent['title'] == "") {
+        if (values['title'] == "") {
             setNameError(true);
         } else {
             createOrEditEvent();
@@ -53,14 +46,12 @@ export default function EventForm (props) {
     };
 
     async function createOrEditEvent() {
-        newEvent['location_string'] = newEvent.location;
-        delete newEvent.location;
-        // let url = props.showCreateForm ? api.events.create : api.events.edit;
+        let url = props.showCreateForm ? api.events.create : api.events.edit;
         try {
-          const res = await fetch(api.events.create(props.token, newEvent));
+          const res = await fetch(url(props.token, newEvent));
           res.json()
           .then(() => {
-              props.refetchEvents();
+              props.refetchTrip();
               props.handleClose();
             }
           )
@@ -127,14 +118,14 @@ export default function EventForm (props) {
                         <BasicTimePicker 
                             label="Start *"
                             value={newEvent.start}
-                            handleChange={handleChange('start')}
+                            onChange={handleChange('start')}
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <BasicTimePicker 
                             label="End *"
                             value={newEvent.end}
-                            handleChange={handleChange('end')}
+                            onChange={handleChange('end')}
                         />
                     </Grid>
                     <Grid item sm={1}>
@@ -168,7 +159,8 @@ export default function EventForm (props) {
                     color="primary"
                     className={classes.submit}
                 >
-                  Create
+                  Save
+                    {/* {props.create ? "Create" : "Update"} */}
                 </Button>
             </DialogActions>
         </Dialog>

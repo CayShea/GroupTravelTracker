@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 
 import TableList from '../components/TableList';
+import useStyles from '../style';
 import api from '../api';
 
 
 export default function TripsList(props) {
     const  [ hasError, setErrors ] =  useState(false);
     const  [ trips, setTrips ]= useState([]);
+    const classes = useStyles();
 
    
     const headCells = [
@@ -33,8 +35,8 @@ export default function TripsList(props) {
 
     return (
           <div>
-            <Grid container justify="center" alignItems="center">
-              <Grid xs={11} item >
+            <Grid container direction="row" justify="center" alignItems="center">
+              <Grid xs={11} item justify="center">
                 <TableList trips={trips} headCells={headCells} tableTitle={'Trips'} token={props.token} fetchData={fetchData} ></TableList>
               </Grid>     
             </Grid>

@@ -8,10 +8,7 @@ import * as actionTypes from './authActionTypes';
 export const initialState = {
     error: null,
     loading: false,
-    token: null,
-    user_displayName: null,
-    user_email: null,
-    user_photo: null
+    token: null
 }
 
 // ########################################################
@@ -39,10 +36,7 @@ const authSuccessReducer = (state, action) => {
     return updateObject(state, {
         error: null,
         loading: false,
-        token: action.token,
-        user_displayName: action.user_displayName,
-        user_email: action.user_email,
-        user_photo: action.user_photo
+        token: action.token
     });
 }
 
@@ -55,10 +49,7 @@ const authFailReducer = (state, action) => {
 
 const authLogoutReducer = (state, action) => {
     return updateObject(state, {
-        token: null,
-        user_displayName: null,
-        user_email: null,
-        user_photo: null,
+        token: null
     });
 }
 

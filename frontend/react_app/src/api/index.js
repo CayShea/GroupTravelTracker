@@ -3,7 +3,6 @@ import tripMembers from "./tripMembers";
 import location from "./location";
 import users from "./users";
 import events from "./events";
-import documents from "./documents";
 
 export default {
     trips,
@@ -11,5 +10,4 @@ export default {
     location,
     users,
     events,
-    documents
 };

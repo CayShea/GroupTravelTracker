@@ -1,7 +1,6 @@
-import React, {useState} from 'react';
+import React from 'react';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
-import Title from './Title';
 import Paper from '@material-ui/core/Paper';
 import Tooltip from '@material-ui/core/Tooltip';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
@@ -9,48 +8,19 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuOpenRoundedIcon from '@material-ui/icons/MenuOpenRounded';
 
 import TripSummary from '../components/TripSummary';
-import EventForm from '../components/EventForm';
 import ItineraryOverview from '../components/ItineraryOverview';
 import useStyles from '../style';
 
 
 export default function Dashboard(props) {
     const classes = useStyles();
-    const [ openCreateEvent, setOpenCreateEvent ] = useState(false);
-
-    const handleClickOpen = () => {
-      setOpenCreateEvent(true);
-    };
-
-    const handleClose = () => {
-      setOpenCreateEvent(false);
-    };
 
     return (
         <Container maxWidth="lg" className={classes.container}>
-          <Grid container spacing={3}>
+            <Grid container spacing={3}>
             {/* ItineraryOverview */}
             <Grid item xs={12} md={6} lg={6}>
                 <Paper className={classes.fixedHeightPaperCenterAlign}>
-                    <Grid container direction="row" justify="space-between">
-                        <Grid item xs={2}>
-                            <Title>Itinerary</Title>
-                        </Grid>
-                        <Grid item xs={2}>
-                            {props.tripDetails && props.events.length > 0 ? 
-                                (
-                                    <Tooltip title="View full Itinerary">
-                                        <IconButton aria-label="itinerary" onClick={props.selectItinerary}>
-                                            <MenuOpenRoundedIcon/>
-                                        </IconButton>
-                                    </Tooltip>
-                                ) : (
-                                    <div></div>
-                                )
-                            }
-
-                        </Grid>
-                    </Grid>
                     {props.tripDetails && props.events.length > 0 ? 
                         (
                             <ItineraryOverview 
@@ -65,11 +35,22 @@ export default function Dashboard(props) {
                         )
                     }
                     <div>
-                        <Tooltip title="Add Event">
-                            <IconButton color="primary" aria-label="create event" onClick={handleClickOpen}>
-                                <AddCircleIcon/>
-                            </IconButton>
-                        </Tooltip>
+                    <Tooltip title="Add Event">
+                        <IconButton className={classes.whiteButton} aria-label="create event" onClick={() => alert("hook up to Create Event form")}>
+                            <AddCircleIcon fontSize="large"/>
+                        </IconButton>
+                    </Tooltip>
+                    {props.tripDetails && props.events.length > 0 ? 
+                        (
+                            <Tooltip title="View full Itinerary">
+                                <IconButton className={classes.whiteButton} aria-label="itinerary" onClick={props.selectItinerary}>
+                                    <MenuOpenRoundedIcon fontSize="large"/>
+                                </IconButton>
+                            </Tooltip>
+                        ) : (
+                            <div></div>
+                        )
+                    }
                     </div>
                 </Paper>
             </Grid>
@@ -98,15 +79,6 @@ export default function Dashboard(props) {
                 </Paper>
             </Grid> */}
             </Grid>
-            <EventForm 
-                open={openCreateEvent}
-                handleClose={handleClose}
-                token={props.token}
-                trip={props.tripDetails}
-                refetchEvents={props.refetchEvents}
-                defaultStartEventTime={props.defaultStartEventTime}
-                defaultEndEventTime={props.defaultEndEventTime}
-            />
         </Container>
     )
 }

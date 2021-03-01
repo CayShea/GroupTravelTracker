@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from '@material-ui/core/AppBar';
@@ -7,18 +7,22 @@ import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
+import Badge from '@material-ui/core/Badge';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import NotificationsIcon from '@material-ui/icons/Notifications';
 import Drawer from '@material-ui/core/Drawer';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import EventIcon from '@material-ui/icons/Event';
+import PeopleIcon from '@material-ui/icons/People';
 import MapIcon from '@material-ui/icons/Map';
 import LayersIcon from '@material-ui/icons/Layers';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import clsx from 'clsx';
+import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 
 import TripForm from '../components/TripForm';
@@ -99,7 +103,9 @@ const useStyles = makeStyles((theme) => ({
   }));
 
 
+
 export default function SideBar(props){
+    const history = useHistory();
     const classes = useStyles();
 
     const [open, setOpen] = React.useState(true);
@@ -159,38 +165,47 @@ export default function SideBar(props){
                 </div>
             <Divider />
             <List>
-                <ListItem  button onClick={props.selectDashboard}>
+                <ListItem button onClick={props.selectDashboard}>
                   <ListItemIcon>
-                    <DashboardIcon color={props.componentShowing === 'dashboard' ? 'primary': 'inherit'}/>
+                    <DashboardIcon />
                   </ListItemIcon>
                   <ListItemText primary="Dashboard" />
                 </ListItem>
                 <ListItem button onClick={props.selectCalendar} >
                   <ListItemIcon>
-                    <EventIcon color={props.componentShowing === 'calendar' ? 'primary': 'inherit'}/>
+                    <EventIcon />
                   </ListItemIcon>
                   <ListItemText primary="Calendar" />
                 </ListItem>
                 <ListItem button onClick={props.selectMap}>
                   <ListItemIcon>
-                    <MapIcon color={props.componentShowing === 'map' ? 'primary': 'inherit'}/>
+                    <MapIcon />
                   </ListItemIcon>
                   <ListItemText primary="Map" />
                 </ListItem>
                 <ListItem button onClick={props.selectItinerary}>
                   <ListItemIcon>
-                    <LayersIcon color={props.componentShowing === 'itinerary' ? 'primary': 'inherit'}/>
+                      <LayersIcon />
                   </ListItemIcon>
                   <ListItemText primary="Itinerary" />
                 </ListItem>
-                <ListItem button onClick={props.selectDocumentsView}>
-                  <ListItemIcon>
-                    <AssignmentIcon color={props.componentShowing === 'documentsView' ? 'primary': 'inherit'}/>
-                  </ListItemIcon>
-                  <ListItemText primary="Travel Docs" />
-                </ListItem>
             </List>
             <Divider />
+            <List>
+              <ListItemText>Coming soon...</ListItemText>
+              {/* <ListItem button disabled>
+                <ListItemIcon>
+                    <PeopleIcon />
+                </ListItemIcon>
+                <ListItemText primary="Travelers" />
+              </ListItem> */}
+              <ListItem button disabled>
+                <ListItemIcon>
+                    <AssignmentIcon />
+                </ListItemIcon>
+                <ListItemText primary="Travel Docs" />
+              </ListItem>
+            </List>
             </Drawer>
         </div>
     )

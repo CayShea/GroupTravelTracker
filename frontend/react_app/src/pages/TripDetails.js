@@ -8,7 +8,6 @@ import Dashboard from '../components/Dashboard';
 import Calendar from '../components/Calendar';
 import Map from '../components/Map';
 import Itinerary from '../components/Itinerary';
-import DocumentsView from '../components/DocumentsView';
 import one from "../components/CustomIcons/one.svg";
 import two from "../components/CustomIcons/two.svg";
 import three from "../components/CustomIcons/three.svg";
@@ -72,26 +71,23 @@ export default function TripDetails(props) {
     const [ componentShowing, setComponentShowing ] = useState('dashboard');
     const [ withinRangeOfToday, setWithinRangeOfToday ] = useState(false);
     const [ todayEventsArray, setTodayEventsArray ] = useState([]);
-    const [ firstEventIndex, setFirstEventIndex ] = useState(null);
-    const [ defaultStartEventTime, setDefaultStartEventTime ] = useState('');
-    const [ defaultEndEventTime, setDefaultEndEventTime ] = useState('');
+    const [ firstEventIndex, setFirstEventIndex ] = useState(0);
 
     const numberIconsArray = [
       one, two, three, four, five, six, seven, eight, nine, ten, eleven, twelve, thirteen, fourteen, fifteen, sixteen, seventeen, eighteen, nineteen, twenty, twentyone, twentytwo, twentythree, twentyfour, twentyfive, twentysix, twentyseven, twentyeight, twentynine, thirty, thirtyone, thirtytwo, thirtythree, thirtyfour, thirtyfive, thirtysix, thirtyseven, thirtyeight, thirtynine, forty, fortyone, fortytwo, fortythree, fortyfour, fortyfive, fortysix, fortyseven, fortyeight, fortynine, fifty
     ];
 
-    const formatItinerary = (events) => {
-      const tripStart = new Date(events[0].start);
-      const tripEnd = new Date(events[events.length - 1].start);
+    const formatItinerary = (trip) => {
+      const tripStart = new Date(trip.startdate);
+      const tripEnd = new Date(trip.enddate);
       const today = new Date();
-      const todayDateString = today.toDateString();
+      const todayDateString = today.toDateString()
   
       if (today.getTime() < tripEnd.getTime() && today.getTime() > tripStart.getTime()) {
+          today.setDate(today.getDate() - 1);
           const firstEvent = events.find(event => new Date(event.start).getTime() >= today.getTime())
           setFirstEventIndex(events.indexOf(firstEvent));
           setWithinRangeOfToday(true);
-      } else {
-        setFirstEventIndex(0);
       }
 
       setTodayEventsArray(events.filter(element =>  new Date(element.start).toDateString() === todayDateString));
@@ -101,9 +97,8 @@ export default function TripDetails(props) {
       const res = await fetch(api.trips.detail(props.token, id));
       res.json()
       .then(res => {
-        setTripDetails(res);   
-        setDefaultStartEventTime(new Date(new Date(res.startdate).toLocaleString()).toISOString().slice(0, -8));
-        setDefaultEndEventTime(new Date(new Date(res.enddate).toLocaleString()).toISOString().slice(0, -8))
+        setTripDetails(res);
+        formatItinerary(res);
       })
       .catch(err => setErrors(err));
     };
@@ -119,9 +114,9 @@ export default function TripDetails(props) {
           x['orderOfEvent'] = numberIconsArray[index];
         });
         let filteredEvents = res.filter(element => element.location);
+        console.log("What is my response??.", filteredEvents)
         setEventsWithLocation(filteredEvents);
         setEvents(res);
-        formatItinerary(res);
       })
       .catch(err => setErrors(err));
     };
@@ -138,9 +133,6 @@ export default function TripDetails(props) {
     const selectItinerary = () => {
       setComponentShowing('itinerary');
     };
-    const selectDocumentsView = () => {
-      setComponentShowing('documentsView');
-    }
     const selectDashboard = () => {
       setComponentShowing('dashboard');
     };
@@ -177,14 +169,6 @@ export default function TripDetails(props) {
               firstEventIndex={firstEventIndex}
             ></Itinerary>
           )
-          case 'documentsView':
-              return (
-              <DocumentsView
-                trip={tripDetails}
-                token={props.token}
-                refetchTrip={fetchTrip}
-              ></DocumentsView>
-            )
         default:
           return (
             <Dashboard 
@@ -194,12 +178,6 @@ export default function TripDetails(props) {
               todayEventsArray={todayEventsArray}
               firstEventIndex={firstEventIndex}
               selectItinerary={selectItinerary}
-              selectDocumentsView={selectDocumentsView}
-              refetchTrip={fetchTrip}
-              refetchEvents={fetchEvents}
-              token={props.token}
-              defaultStartEventTime={defaultStartEventTime}
-              defaultEndEventTime={defaultEndEventTime}
             ></Dashboard>
           );
       }
@@ -214,19 +192,13 @@ export default function TripDetails(props) {
           selectCalendar={selectCalendar}
           selectMap={selectMap}
           selectItinerary={selectItinerary}
-          selectDocumentsView={selectDocumentsView}
           isDashboardView={true} 
-          fetchData={fetchTrip}
-          componentShowing={componentShowing}
+          fetchData={fetchTrip} 
           token={props.token}
         />
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
-          { firstEventIndex !== null ? (
-            <RenderSwitch value={componentShowing} token={props.token}/>
-          ) : (
-            <div></div>
-          )}
+          <RenderSwitch value={componentShowing} token={props.token}/>
         </main>
       </div>
     );

@@ -14,6 +14,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import * as actions from '../store/authActions';
 import useStyles from '../style';
 import ConfirmEmailModel from '../components/modals/ConfirmEmailModal';
+// import AvatarUpload from '../components/AvatarUpload';
 
 
 function SignUp(props) {
@@ -38,6 +39,7 @@ function SignUp(props) {
 
   useEffect(() => {
     if (props.error) {
+      console.log("THERE was some sort of error ?? >>>", props.error)
       setFieldError(true);
       setFormSubmitted(false);
     };

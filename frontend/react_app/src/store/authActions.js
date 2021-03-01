@@ -16,13 +16,10 @@ export const authStart = () => {
     }
 }
 
-export const authSuccess = (token, user_displayName, user_email, user_photo) => {
+export const authSuccess = (token) => {
     return {
         type: actionTypes.AUTH_SUCCESS,
-        token: token,
-        user_displayName: user_displayName,
-        user_email: user_email,
-        user_photo: user_photo
+        token: token
     }
 }
 
@@ -42,9 +39,6 @@ export const authLogout = () => {
         }, {headers: {'Authorization': `Token ${token}`}} ).then(res => {console.log(res)}).catch(err => {console.log(err)});
         localStorage.removeItem('token');
         localStorage.removeItem('expirationDate');
-        localStorage.removeItem('user_displayName');
-        localStorage.removeItem('user_email');
-        localStorage.removeItem('user_photo');
     }
 
     return {
@@ -79,15 +73,7 @@ export const authLogin = (email, password) => {
             const expirationDate = new Date(new Date().getTime() + SESSION_DURATION );
             localStorage.setItem('token', token);
             localStorage.setItem('expirationDate', expirationDate);
-            return axios({ method: 'get', url: `${settings.API_SERVER}/rest-auth/user/`, headers: {'Authorization': `Token ${token}`} })
-        })
-        .then(res => {
-            const user = res.data;
-            const token = localStorage.getItem('token');
-            localStorage.setItem('user_displayName', user.display_name);
-            localStorage.setItem('user_email', user.email);
-            localStorage.setItem('user_photo', user.photo);
-            dispatch(authSuccess(token, user.display_name, user.email, user.photo));
+            dispatch(authSuccess(token));
             dispatch(authCheckTimeout(SESSION_DURATION));
         })
         .catch(err => {
@@ -122,9 +108,6 @@ export const authSignup = (email, password, displayName) => {
 export const authCheckState = () => {
     return dispatch => {
         const token = localStorage.getItem('token');
-        const user_displayName = localStorage.getItem('user_displayName');
-        const user_email = localStorage.getItem('user_email');
-        const user_photo = localStorage.getItem('user_photo');
         if (token === undefined) {
             dispatch(authLogout());
         } else {
@@ -132,19 +115,9 @@ export const authCheckState = () => {
             if ( expirationDate <= new Date() ) {
                 dispatch(authLogout());
             } else {
-                dispatch(authSuccess(token, user_displayName, user_email, user_photo));
+                dispatch(authSuccess(token));
                 dispatch(authCheckTimeout( expirationDate.getTime() - new Date().getTime()) );
             }
         }
-    }
-}
-
-export const updateUser = (email, displayName, photo) => {
-    return dispatch => {
-        const token = localStorage.getItem('token');
-        localStorage.setItem('user_email', email)
-        localStorage.setItem('user_displayName', displayName)
-        localStorage.setItem('user_photo', photo);
-        dispatch(authSuccess(token, email, displayName, photo))
     }
 }

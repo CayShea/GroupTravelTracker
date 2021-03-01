@@ -32,10 +32,6 @@ const useStyles = makeStyles((theme) => ({
       margin: theme.spacing(1),
       backgroundColor: theme.palette.secondary.main,
     },
-    profileAvatar: {
-      width: theme.spacing(10),
-      height: theme.spacing(10),
-    },
     textField: {
       marginLeft: theme.spacing(1),
       marginRight: theme.spacing(1),
@@ -44,7 +40,6 @@ const useStyles = makeStyles((theme) => ({
     form: {
       width: '100%',
       marginTop: theme.spacing(3),
-      align: 'center'
     },
     formControl: {
       margin: theme.spacing(1),
@@ -71,15 +66,6 @@ const useStyles = makeStyles((theme) => ({
           marginTop: theme.spacing(3),
         }
     },
-    input: {
-      display: 'none'
-    },
-    hrefDisplay: {
-      textDecoration: 'none'
-    },
-    moreVerticalIcon: {
-      marginLeft: 'auto'
-    },
     title: {
       flex: '1 1 100%',
     },
@@ -88,10 +74,6 @@ const useStyles = makeStyles((theme) => ({
     },
     ternaryTitle: {
       fontSize: 16
-    },
-    textField: {
-      marginTop:"12px",
-      backgroundColor: theme.palette.common.white,
     },
     toolbar: {
       paddingRight: 24, // keep right padding when drawer closed
@@ -176,16 +158,6 @@ const useStyles = makeStyles((theme) => ({
       flexDirection: 'column',
       backgroundColor: "#D3D3D3"
     },
-    profilePaperBlocks: {
-      marginTop: theme.spacing(5),
-      padding: theme.spacing(2),
-      display: 'flex',
-      alignContent: 'center',
-      alignItems: 'center',
-      justifyContent: 'center',
-      flexDirection: 'column',
-      backgroundColor: "#D3D3D3"
-    },
     fixedHeightPaperLeftAlign: {
       padding: theme.spacing(2),
       display: 'flex',
@@ -218,11 +190,6 @@ const useStyles = makeStyles((theme) => ({
       paddingLeft: '6px',
       marginLeft: '7px'
     },
-    hoverCursor: {
-      "&:hover" : {
-        cursor: 'pointer'
-      }
-    }
   }));
 
 export default useStyles;
