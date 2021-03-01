@@ -21,7 +21,10 @@ const mapStateToProps = (state) => {
   return {
     isAuthenticated: state.auth.token !== null && typeof state.auth.token !== 'undefined',
     error: state.auth.error,
-    token: state.auth.token
+    token: state.auth.token,
+    user_displayName: state.auth.user_displayName,
+    user_email: state.auth.user_email,
+    user_photo: state.auth.user_photo
   }
 }
 

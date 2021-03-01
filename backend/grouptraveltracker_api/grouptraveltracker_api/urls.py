@@ -15,8 +15,10 @@ Including another URLconf
 """
 from allauth.account.views import confirm_email
 from django.conf.urls import url
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,11 +26,13 @@ urlpatterns = [
     path('api/', include('apps.trip_members.urls')),
     path('api/', include('apps.events.urls')),
     path('api/', include('apps.users.urls')),
+    path('api/', include('apps.traveldocs.urls')),
+    path('api/', include('apps.notes.urls')),
     path('registration/', include('rest_auth.registration.urls')),
     path('rest-auth/', include('rest_auth.urls')),
     path('registration/account-confirm-email/(?P<key>.+)/$', confirm_email, name='account_confirm_email'),
     path('accounts/', include('allauth.urls')),
-]
+] + static(settings.MEDIA_URL, document_root= settings.MEDIA_ROOT)
 
 
 # USER registration:

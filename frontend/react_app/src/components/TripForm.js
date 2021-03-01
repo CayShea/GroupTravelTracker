@@ -15,6 +15,7 @@ import { startOfToday } from 'date-fns';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
 import EditIcon from '@material-ui/icons/Edit';
+import Tooltip from '@material-ui/core/Tooltip';
 import Chip from '@material-ui/core/Chip';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
@@ -154,14 +155,18 @@ export default function CreateTrip(props) {
   return (
     <div className={classes.root}>
         { props.create ? 
-            ( 
-                <IconButton color="primary" aria-label="create trip" onClick={handleClickOpen}>
-                    <AddCircleIcon fontSize="large"/>
-                </IconButton>
+            (     
+                <Tooltip title="Create Trip">
+                    <IconButton color="primary" aria-label="create trip" onClick={handleClickOpen}>
+                        <AddCircleIcon fontSize="large"/>
+                    </IconButton>
+                </Tooltip>
             ) : (
-                <IconButton color="inherit" aria-label="edit trip" onClick={handleClickOpen}>
-                    <EditIcon/> 
-                </IconButton>
+                <Tooltip title="Edit Trip">
+                    <IconButton color="inherit" aria-label="edit trip" onClick={handleClickOpen}>
+                        <EditIcon /> 
+                    </IconButton>
+                </Tooltip>
             )
         }
         <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">

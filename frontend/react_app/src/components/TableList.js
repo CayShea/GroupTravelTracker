@@ -67,31 +67,22 @@ const EnhancedTableToolbar = (props) => {
 
   return (
     <Toolbar className={clsx(classes.root)}>
-        <TripForm reloadScreen={props.reloadScreen} token={props.token} create={true}></TripForm> 
-        <Typography className={classes.title}  color="primary" variant="p" id="create" component="div">
-            Create
-        </Typography>
-
-        
+        <TripForm reloadScreen={props.reloadScreen} token={props.token} create={true}></TripForm>
         <Typography className={classes.title}  color="primary" variant="h6" id="tableTitle" component="div" align='center'>
             {tableTitle}
         </Typography>
-        
 
-        <Typography className={classes.title}  color="primary" variant="p" id="create" component="div" align='right'>
-            Delete
-        </Typography>
         {numSelected > 0 ? (
-            <Tooltip title="Delete">
-                <IconButton aria-label="delete" onClick={props.deleteSelected}>
-                    <DeleteIcon />
+            <Tooltip title="Delete Trip">
+                <IconButton aria-label="delete" color="primary" onClick={props.deleteSelected}>
+                    <DeleteIcon fontSize="default" />
                 </IconButton>
             </Tooltip>
         ) : (
-            <Tooltip title="Delete">
+            <Tooltip title="Delete Trip">
               <span>
                   <IconButton aria-label="delete" disabled>
-                      <DeleteIcon />
+                      <DeleteIcon fontSize="default" />
                   </IconButton>
               </span>
             </Tooltip>
@@ -156,8 +147,8 @@ export default function TableList(props) {
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
   return (
-    <div className={classes.root}>
-      <Grid container spacing={3} justify="center">     
+    <div className={classes.root}> 
+      <Grid container justify="center">     
         <Grid item xs={10}>
           <Paper className={classes.ternaryPaper}>
             <EnhancedTableToolbar reloadScreen={props.fetchData} token={props.token} tableTitle={props.tableTitle} deleteSelected={deleteSelected} numSelected={selected.length}/>
@@ -195,7 +186,7 @@ export default function TableList(props) {
                                             inputProps={{ 'aria-labelledby': labelId }}
                                         />
                                     </TableCell>
-                                    <TableCell component="th" scope="row" onClick={() => {history.push(`/trips/${row.id}`)}}>{row.name}</TableCell>
+                                    <TableCell className={classes.hoverCursor} component="th" scope="row" onClick={() => {history.push(`/trips/${row.id}`)}}>{row.name}</TableCell>
                                     <TableCell align="left">{row.startdate}</TableCell>
                                     <TableCell align="left">{row.location.title}</TableCell>
                                     <TableCell align="left">{row.budget}</TableCell>
@@ -209,7 +200,7 @@ export default function TableList(props) {
                 </TableBody>
               </Table>
             </TableContainer>
-            </Paper>
+          </Paper>
         </Grid>
       </Grid>
     </div>

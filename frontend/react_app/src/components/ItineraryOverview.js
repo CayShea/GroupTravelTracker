@@ -62,7 +62,7 @@ function ItineraryOverview(props) {
         todayEventsArray.forEach((value, i) => {
             rows.push(<EventRow title={value.title} start={value.start} key={value.id} isToday={true}/>)
         });
-        for (let i = 0; i < remainderEventRowIndexes; i++) {
+        for (let i = firstEventIndex; i <= remainderEventRowIndexes; i++) {
             let value = events[i];
             rows.push(<EventRow title={value.title} start={value.start} key={i} isToday={false}/>)
         };

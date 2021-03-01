@@ -5,11 +5,11 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import { useHistory } from 'react-router-dom';
+import Avatar from '@material-ui/core/Avatar';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,7 +26,6 @@ const useStyles = makeStyles((theme) => ({
 export default function Header(props) {
   const classes = useStyles();
   const history = useHistory();
-  const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
 
@@ -37,6 +36,11 @@ export default function Header(props) {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const navigateToProfile = () => {
+    handleClose();
+    history.push(`/profile/`);
+  }
 
   return (
     <div className={classes.root}>
@@ -55,25 +59,20 @@ export default function Header(props) {
                 onClick={handleMenu}
                 color="inherit"
               >
-                <AccountCircle />
+                { props.user_photo ? (
+                  <Avatar className={classes.profileAvatar} alt={props.user_displayName} src={props.user_photo} />
+                ) : (
+                  <AccountCircle />
+                )}
               </IconButton>
               <Menu
                 id="menu-appbar"
                 anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
                 keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
                 open={open}
                 onClose={handleClose}
               >
-                <MenuItem onClick={() => history.push(`/profile/`)}>Profile</MenuItem>
-                {/* <MenuItem onClick={handleClose}>My account</MenuItem> */}
+                <MenuItem onClick={navigateToProfile}>Profile</MenuItem>
               </Menu>
             </div>
           )}
