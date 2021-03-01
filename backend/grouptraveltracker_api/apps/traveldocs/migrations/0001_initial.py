@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('events', '0004_auto_20210127_1007'),
+        ('events', '0001_initial'),
         ('trips', '0007_auto_20210127_1007'),
     ]
 
