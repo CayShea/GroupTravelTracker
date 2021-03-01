@@ -24,17 +24,7 @@ class TraveldocsViewSet(RWSerializerModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        private_user_docs = Traveldocs.objects.filter(owner_id=self.request.user.id, trip__isnull=True, event__isnull=True, isprivate=True)
-        if self.request.GET.get('trip_id'):
-            private_trip_docs = Traveldocs.objects.filter(owner_id=self.request.user.id, trip__id=self.request.GET.get('trip_id'), isprivate=True)
-            public_trip_docs = Traveldocs.objects.filter(trip__id=self.request.GET.get('trip_id'), isprivate=False)
-            # return {
-            #     "private_user_docs": private_user_docs,
-            #     "private_trip_docs": private_trip_docs,
-            #     "public_trip_docs": public_trip_docs
-            # }
-            private_user_docs = private_user_docs | private_trip_docs | public_trip_docs
-        return private_user_docs
+        return Traveldocs.objects.all()
     
     def post(self, request, *args, **kwargs):
         posts_serializer = TraveldocsWriteSerializer(data=request.data)
