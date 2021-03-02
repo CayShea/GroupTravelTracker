@@ -96,13 +96,13 @@ export const authLogin = (email, password) => {
     }
 }
 
-export const authSignup = (email, password, displayName) => {
+export const authSignup = (email, password1, password2, displayName) => {
     return dispatch => {
         dispatch(authStart());
         axios.post(`${settings.API_SERVER}/registration/`, {
             email: email,
-            password1: password,
-            password2: password,
+            password1: password1,
+            password2: password2,
             display_name: displayName
         })
         .then(res => {

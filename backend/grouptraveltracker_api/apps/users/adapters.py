@@ -15,9 +15,6 @@ class CustomUserAccountAdapter(DefaultAccountAdapter):
 
         user = super().save_user(request, user, form, False)
         user_field(user, 'display_name', request.data.get('display_name', ''))
-        # user_field(user, 'photo', request.data.get('photo', ''))
+        user_field(user, 'photo', request.data.get('photo', ''))
         user.save()
         return user
-
-        #  (<TemporaryUploadedFile: _A045762_3L.jpg (image/jpeg)>,)
-        #   (<InMemoryUploadedFile: _DS33679n.jpg (image/jpeg)>,)

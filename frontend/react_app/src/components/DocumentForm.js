@@ -62,9 +62,9 @@ const DocumentForm = (props) => {
             try {
               const res = await fetch(api.documents.create(props.token, formData));
               res.json()
-              .then((res) => {
+              .then(() => {
                   handleClose();
-                //   props.reloadScreen();
+                  props.refetchTrip();
               })
             } catch (err) {
               setError(err)

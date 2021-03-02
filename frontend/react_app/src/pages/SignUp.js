@@ -18,13 +18,13 @@ import ConfirmEmailModel from '../components/modals/ConfirmEmailModal';
 
 function SignUp(props) {
   const classes = useStyles();
-  const [email, setEmail] = useState(null);
-  const [password1, setPassword1] = useState(null);
-  const [password2, setPassword2] = useState(null);
-  const [displayName, setDisplayName] = useState(null);
+  const [ email, setEmail ] = useState('');
+  const [ password1, setPassword1 ] = useState('');
+  const [ password2, setPassword2 ] = useState('');
+  const [ displayName, setDisplayName ] = useState('');
   const [ formSubmitted, setFormSubmitted ] = useState(false);
   const [ fieldError, setFieldError ] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [ open, setOpen ] = useState(false);
 
   let history = useHistory();
   let location = useLocation();
@@ -63,8 +63,8 @@ function SignUp(props) {
   // props.onAuth(formData);
 
   props.onAuth(email, password1, password2, displayName);
-  setFormSubmitted(true);
- };
+    setFormSubmitted(true);
+  };
 
  const handleClose = () => {
   setOpen(false);
@@ -90,13 +90,13 @@ function SignUp(props) {
                   <TextField
                     error
                     helperText="Required"
-                    name="displayName"
                     variant="outlined"
                     required
                     fullWidth
                     id="displayName"
                     label="Display Name"
                     autoFocus
+                    value={displayName}
                     onChange={handleFormFieldChange}
                   />
                 </Grid>
@@ -109,8 +109,8 @@ function SignUp(props) {
                     fullWidth
                     id="email"
                     label="Email Address"
-                    name="email"
                     autoComplete="email"
+                    value={email}
                     onChange={handleFormFieldChange}
                   />
                 </Grid>
@@ -121,10 +121,10 @@ function SignUp(props) {
                     variant="outlined"
                     required
                     fullWidth
-                    name="password1"
                     label="Password"
                     type="password"
                     id="password1"
+                    value={password1}
                     onChange={handleFormFieldChange}
                   />
                 </Grid>
@@ -135,10 +135,10 @@ function SignUp(props) {
                     variant="outlined"
                     required
                     fullWidth
-                    name="password2"
                     label="Password"
                     type="password"
                     id="password2"
+                    value={password2}
                     onChange={handleFormFieldChange}
                   />
                 </Grid>
@@ -147,13 +147,13 @@ function SignUp(props) {
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <TextField
-                    name="displayName"
                     variant="outlined"
                     required
                     fullWidth
                     id="displayName"
                     label="Display Name"
                     autoFocus
+                    value={displayName}
                     onChange={handleFormFieldChange}
                   />
                 </Grid>
@@ -164,8 +164,8 @@ function SignUp(props) {
                     fullWidth
                     id="email"
                     label="Email Address"
-                    name="email"
                     autoComplete="email"
+                    value={email}
                     onChange={handleFormFieldChange}
                   />
                 </Grid>
@@ -174,10 +174,10 @@ function SignUp(props) {
                     variant="outlined"
                     required
                     fullWidth
-                    name="password1"
                     label="Password"
                     type="password"
                     id="password1"
+                    value={password1}
                     onChange={handleFormFieldChange}
                   />
                 </Grid>
@@ -187,10 +187,10 @@ function SignUp(props) {
                     required
                     fullWidth
                     helperText="* Password must be longer than 8 characters."
-                    name="password2"
                     label="Enter Password again"
                     type="password"
                     id="password2"
+                    value={password2}
                     onChange={handleFormFieldChange}
                   />
                 </Grid>

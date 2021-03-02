@@ -25,6 +25,7 @@ function Profile(props) {
     const classes = useStyles();
     const [ email, setEmail ] = useState(props.user_email);
     const [ avatar, setAvatar ] = useState(props.user_photo);
+    const [ displayPhoto, setDisplayPhoto ] = useState(props.user_photo);
     const [ displayName, setDisplayName ] = useState(props.user_displayName);
     const [ password1, setPassword1 ] = useState(null);
     const [ password2, setPassword2 ] = useState(null);
@@ -66,7 +67,6 @@ function Profile(props) {
             const res = await fetch(api.users.edit(props.token, formData));
             res.json()
             .then((res) => {
-                // need to update the STORE with the details...
                 console.log(res)
                 props.updateUser(res.email, res.displayName, res.photo);
             })
@@ -88,6 +88,7 @@ function Profile(props) {
     const handleUploadClick = event => {
         var file = event.target.files[0];
         setAvatar(file);
+        setDisplayPhoto(URL.createObjectURL(file))
     };
 
     return (
@@ -175,9 +176,7 @@ function Profile(props) {
                                     anchorOrigin={{vertical: 'top', horizontal: 'right'}}
                                     badgeContent={<EditIcon /> }
                                 >
-                                    {/* https://medium.com/@emeruchecole9/uploading-images-to-rest-api-backend-in-react-js-b931376b5833 */}
-                                    <Avatar className={classes.profileAvatar} alt={props.user_displayName} src={props.user_photo} />
-                                    {/* src={avatar && avatar != 'null' ? URL.createObjectURL(avatar) : ''} */}
+                                    <Avatar className={classes.profileAvatar} alt={props.user_displayName} src={displayPhoto} />
                                 </Badge>
                             </Fab>
                         </label>
