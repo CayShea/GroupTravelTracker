@@ -180,14 +180,13 @@ const DocumentsView = (props) => {
                 props.refetchTrip();
             }
         )} catch (err) {
-            console.log("some error is happening..")
             setError(err);
       }
     };
 
     async function deleteSelected(id) {
         try {
-            const res = await fetch(api.documents.delete(props.token, id)).then( props.refetchTrip())
+            const res = await fetch(api.documents.delete(props.token, id)).then(() => {props.refetchTrip()})
         } catch (err) {
             setError(err);
         }
@@ -202,7 +201,7 @@ const DocumentsView = (props) => {
 
     return (
         <Container maxWidth="lg">
-            <DocumentForm token={props.token} tripId={props.trip.id}/>
+            <DocumentForm token={props.token} tripId={props.trip.id} refetchTrip={props.refetchTrip}/>
             <Grid container spacing={1}>
                 <Grid container item xs={12} spacing={3}>
                     {documentDisplays}

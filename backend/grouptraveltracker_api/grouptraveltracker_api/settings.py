@@ -58,7 +58,7 @@ INSTALLED_APPS = TRAVEL_TRACKER_APPS + REQUIRED_APPS
 
 
 AUTH_USER_MODEL = 'users.CustomUser'
-# ACCOUNT_ADAPTER = 'apps.users.adapters.CustomUserAccountAdapter'
+ACCOUNT_ADAPTER = 'apps.users.adapters.CustomUserAccountAdapter'
 REST_AUTH_SERIALIZERS = {
     'USER_DETAILS_SERIALIZER': 'apps.users.serializers.UserSerializer',
 }

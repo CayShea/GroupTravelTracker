@@ -13,6 +13,7 @@ export default {
         ))
     },
     edit(token, values){
+        console.log("Values to EDIT: >>", values)
         const header = new Headers({'Authorization': `Token ${token}`});
         return (
             new Request(`${API_SERVER}/rest-auth/user/`,
