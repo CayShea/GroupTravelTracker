@@ -1,8 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import DeleteIcon from '@material-ui/icons/Delete';
 import Badge from '@material-ui/core/Badge';
 import Avatar from '@material-ui/core/Avatar';
 import Dialog from '@material-ui/core/Dialog';
@@ -11,10 +9,15 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import DeleteIcon from '@material-ui/icons/Delete';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Container from '@material-ui/core/Container';
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import Checkbox from '@material-ui/core/Checkbox';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 
 import useStyles from '../style';
 import api from '../api';
@@ -215,8 +218,12 @@ function ItemGrid (props) {
 function ChecklistPopup (props) {
     const classes = useStyles();
     const selectedChecklist = props.selectedChecklist;
-    const [ items, setItems ] = useState(props.checklistItems)
+    const [ items, setItems ] = useState(props.checklistItems);
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const open = Boolean(anchorEl);
+    const  [ hasError, setError ] =  useState(false);
   
+
     async function handleChecklistItemDelete (checklistId) {
         try {
             const res = await fetch(api.checklist.item_delete(props.token, checklistId))
@@ -275,16 +282,65 @@ function ChecklistPopup (props) {
       }
     };
 
+    async function deleteSelected() {
+        try {
+            const res = await fetch(api.checklist.delete(props.token, selectedChecklist.id))
+            .then(() => {props.refetchChecklists()})
+        } catch (err) {
+            setError(err);
+        }
+    };
+
     const handleClose = () => {
         props.refetchChecklists()
         props.handleClose()
-    }
+    };
+
+    const handleMenu = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleCloseMoreOpt = () => {
+      setAnchorEl(null);
+    };
 
     return (
         <Container maxWidth="lg">
-            <Dialog open={props.open} onClose={handleClose}>
+            <Dialog open={props.open} onClose={handleClose} className={classes.root}>
                 <DialogTitle id="form-dialog-title">
                     {selectedChecklist.title}
+                    <IconButton 
+                        aria-label="settings"
+                        aria-controls="menu-appbar"
+                        aria-haspopup="true"
+                        onClick={handleMenu}
+                        color="inherit"
+                        className={classes.moreVerticalIcon}
+                    >
+                        <MoreVertIcon />
+                    </IconButton>
+                    <Menu
+                        id="menu-appbar"
+                        anchorEl={anchorEl}
+                        anchorOrigin={{
+                            vertical: 'top',
+                            horizontal: 'left',
+                        }}
+                        keepMounted
+                        transformOrigin={{
+                            vertical: 'top',
+                            horizontal: 'left',
+                        }}
+                        open={open}
+                        onClose={handleCloseMoreOpt}
+                    >
+                        <MenuItem onClick={deleteSelected}>
+                            <IconButton aria-label="delete" color="primary">
+                                <DeleteIcon fontSize="default" />
+                            </IconButton>
+                            Delete
+                        </MenuItem>
+                    </Menu>
                 </DialogTitle>
                 <DialogContent>
                     { items ? (
