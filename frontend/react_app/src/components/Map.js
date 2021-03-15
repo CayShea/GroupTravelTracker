@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Container from '@material-ui/core/Container';
+import Grid from '@material-ui/core/Grid';
 
 import useStyles from '../style';
 import PropTypes from 'prop-types';
@@ -53,7 +54,7 @@ const MapScreen = (props) => {
 
     return (
         <div className={classes.secondaryRoot}>
-          <Container maxWidth="lg" className={classes.container}>
+          <Grid container direction="row" justify="flex-start" className={classes.gridContainer}>
               <Map
                   item
                   xs = { 12 }
@@ -106,7 +107,7 @@ const MapScreen = (props) => {
                   </InfoWindow>
                 )}               
               </Map>
-          </Container>
+          </Grid>
         </div>
     )
 };

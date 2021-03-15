@@ -174,6 +174,11 @@ const useStyles = makeStyles((theme) => ({
       display: 'flex',
       flexWrap: 'wrap',
     },
+    gridContainer: {
+      paddingTop: theme.spacing(4),
+      paddingBottom: theme.spacing(4),
+      paddingLeft: theme.spacing(4),
+    },
     fixedHeight: {
       height: 300,
     },
