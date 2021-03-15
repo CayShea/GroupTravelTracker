@@ -12,6 +12,7 @@ import { connect } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 
 import * as actions from '../store/authActions';
+import Footer from "../components/Footer";
 import useStyles from '../style';
 import ConfirmEmailModel from '../components/modals/ConfirmEmailModal';
 
@@ -233,6 +234,7 @@ function SignUp(props) {
           <ConfirmEmailModel open={open} handleClose={handleClose}/>
         </div>
       </div>
+      <Footer />
     </Container>
   );
 }

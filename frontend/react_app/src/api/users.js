@@ -13,12 +13,22 @@ export default {
         ))
     },
     edit(token, values){
-        console.log("Values to EDIT: >>", values)
         const header = new Headers({'Authorization': `Token ${token}`});
         return (
             new Request(`${API_SERVER}/rest-auth/user/`,
             {
                 method: "PATCH",
+                headers: header,
+                body: values
+            }
+        ))
+    },
+    passwordChange(token, values){
+        const header = new Headers({'Authorization': `Token ${token}`});
+        return (
+            new Request(`${API_SERVER}/rest-auth/password/change/`,
+            {
+                method: "POST",
                 headers: header,
                 body: values
             }

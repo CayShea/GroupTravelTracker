@@ -2,6 +2,7 @@ import React from 'react';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
+import Footer from "./Footer"
 
 import useStyles from '../style';
 
@@ -80,6 +81,7 @@ function Itinerary(props) {
                     {rows}
                 </Grid>
             </Grid>
+            <Footer />
         </Container>
     )
 }

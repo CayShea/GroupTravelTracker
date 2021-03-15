@@ -28,6 +28,7 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 
 import useStyles from '../style';
+import Footer from "./Footer"
 import api from '../api';
 import DocumentForm from '../components/DocumentForm';
 
@@ -265,6 +266,7 @@ const DocumentsView = (props) => {
                     </DialogActions>
                 </form>
             </Dialog>
+            <Footer />
         </Container>
     )
 }

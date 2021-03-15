@@ -32,8 +32,8 @@ class TraveldocsViewSet(RWSerializerModelViewSet):
         private_user_docs = Traveldocs.objects.filter(owner_id=self.request.user.id, trip__isnull=True, event__isnull=True, isprivate=True)
         if self.request.GET.get('trip_id'):
             private_trip_docs = Traveldocs.objects.filter(owner_id=self.request.user.id, trip__id=self.request.GET.get('trip_id'), isprivate=True)
-            private_user_docs = private_user_docs | private_trip_docs | public_trip_docs
             public_trip_docs = Traveldocs.objects.filter(trip__id=self.request.GET.get('trip_id'), isprivate=False)
+            private_user_docs = private_user_docs | private_trip_docs | public_trip_docs
             # return {
             #     "private_user_docs": private_user_docs,
             #     "private_trip_docs": private_trip_docs,

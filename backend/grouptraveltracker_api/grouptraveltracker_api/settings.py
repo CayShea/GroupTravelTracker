@@ -52,6 +52,8 @@ TRAVEL_TRACKER_APPS = [
     'apps.location.apps.LocationConfig',
     'apps.traveldocs.apps.TraveldocsConfig',
     'apps.notes.apps.NotesConfig',
+    'apps.checklist.apps.ChecklistConfig',
+    'apps.checklist_items.apps.ChecklistItemsConfig',
 ]
 
 INSTALLED_APPS = TRAVEL_TRACKER_APPS + REQUIRED_APPS
@@ -70,6 +72,7 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    #       https://stackoverflow.com/questions/27180353/django-project-looking-for-attribute-session-cache
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -140,10 +143,10 @@ EMAIL_HOST_USER = DEFAULT_FROM_EMAIL = 'cayleesheaharrington@gmail.com'
 EMAIL_HOST_PASSWORD = 'She1201615003!'
 EMAIL_SUBJECT_PREFIX = 'Group Travel Tracker - Confirm your email'
 
+
 SITE_ID = 2
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-
 #tech-debt- set up email verification
 # sending the email verification message upon user registration with verification link
 # when user clicks on the link his email gets verified and is redirected to /?verification=1
@@ -213,6 +216,9 @@ STATICFILES_DIRS = (
     #This lets Django's collectstatic store our bundles
     os.path.join(BASE_DIR, 'media'), 
 )
+
+# Django rest-auth, old_password required to change
+OLD_PASSWORD_FIELD_ENABLED = True
 
 
 #########################################

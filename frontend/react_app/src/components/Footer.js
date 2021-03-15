@@ -5,7 +5,7 @@ import Link from '@material-ui/core/Link';
 
 function Footer() {
     return (
-      <Typography variant="body2" color="textSecondary" align="center">
+      <Typography variant="body2" color="textSecondary" align="center" style={{margin: '50px'}}>
         {'Copyright © '}
         <Link color="inherit" href="https://material-ui.com/">
           Group Travel Tracker

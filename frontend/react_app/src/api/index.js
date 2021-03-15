@@ -4,6 +4,8 @@ import location from "./location";
 import users from "./users";
 import events from "./events";
 import documents from "./documents";
+import notes from "./notes";
+import checklist from "./checklist";
 
 export default {
     trips,
@@ -11,5 +13,7 @@ export default {
     location,
     users,
     events,
-    documents
+    documents,
+    notes,
+    checklist
 };

@@ -36,10 +36,13 @@ const useStyles = makeStyles((theme) => ({
       width: theme.spacing(10),
       height: theme.spacing(10),
     },
-    textField: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      width: 200,
+    miniAvatar: {
+      width: theme.spacing(3),
+      height: theme.spacing(3),
+    },
+    marginTopBottom: {
+      marginBottom: theme.spacing(2),
+      marginTop: theme.spacing(2),
     },
     form: {
       width: '100%',
@@ -77,11 +80,17 @@ const useStyles = makeStyles((theme) => ({
     hrefDisplay: {
       textDecoration: 'none'
     },
+    redText: {
+      color: 'red'
+    },
     moreVerticalIcon: {
       marginLeft: 'auto'
     },
     title: {
       flex: '1 1 100%',
+    },
+    tripDetailsTitle: {
+      flex: 1
     },
     secondaryTitle: {
       flexGrow: 1
@@ -97,11 +106,12 @@ const useStyles = makeStyles((theme) => ({
       paddingRight: 24, // keep right padding when drawer closed
     },
     toolbarIcon: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'flex-end',
-      padding: '0 8px',
-      ...theme.mixins.toolbar,
+      marginLeft: 'auto'
+      // display: 'flex',
+      // alignItems: 'center',
+      // justifyContent: 'flex-end',
+      // padding: '0 8px',
+      // ...theme.mixins.toolbar,
     },
     appBar: {
       marginTop: theme.spacing(8),
@@ -200,13 +210,14 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: "#ADD8E6",
       marginBottom: theme.spacing(1),
     },
-    itineraryRowToday: {
+    checklistRow: {
       padding: theme.spacing(1),
       display: "flex",
       flexDirection: 'column',
       justifyContent: 'space-around',
       backgroundColor: "#FFFF99",
       marginBottom: theme.spacing(1),
+      width: '500px'
     },
     avatarImage: {
       height: '100px',

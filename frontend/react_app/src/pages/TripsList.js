@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 
 import TableList from '../components/TableList';
+import Footer from "../components/Footer";
 import api from '../api';
 
 
@@ -38,6 +39,7 @@ export default function TripsList(props) {
                 <TableList trips={trips} headCells={headCells} tableTitle={'Trips'} token={props.token} fetchData={fetchData} ></TableList>
               </Grid>     
             </Grid>
+            <Footer />
           </div>
     );
 }

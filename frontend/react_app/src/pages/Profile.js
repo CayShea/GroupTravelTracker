@@ -23,28 +23,22 @@ Profile.propTypes = {
 
 function Profile(props) {
     const classes = useStyles();
-    const [ email, setEmail ] = useState(props.user_email);
     const [ avatar, setAvatar ] = useState(props.user_photo);
     const [ displayPhoto, setDisplayPhoto ] = useState(props.user_photo);
     const [ displayName, setDisplayName ] = useState(props.user_displayName);
+    const [ oldpassword, setOldPassword ] = useState(null);
     const [ password1, setPassword1 ] = useState(null);
     const [ password2, setPassword2 ] = useState(null);
-    const [ formSubmitted, setFormSubmitted ] = useState(false);
-    const [ fieldError, setFieldError ] = useState(false);
-    const [ open, setOpen ] = useState(false);
+    const [ editProfileError, setEditProfileError ] = useState('');
+    const [ passwordError, setPasswordError ] = useState('');
+    const [ passwordUpdated, setPasswordUpdated ] = useState(false);
     const  [ hasError, setError ] =  useState(false);
 
-    useEffect(() => {
-        if (props.error) {
-          setFieldError(true);
-          setFormSubmitted(false);
-        };
-    });
 
     const handleFormFieldChange = (event) => {
         switch(event.target.id) {
-          case 'email': setEmail(event.target.value); break;
           case 'displayName': setDisplayName(event.target.value); break;
+          case 'oldpassword': setOldPassword(event.target.value); break;
           case 'password1': setPassword1(event.target.value); break;
           case 'password2': setPassword2(event.target.value); break;
           default: return null;
@@ -54,35 +48,45 @@ function Profile(props) {
     async function handleEditProfile(e) {
         e.preventDefault();
         let formData = new FormData();
-        if (avatar && avatar !== props.user_photo) {
+        if (avatar !== props.user_photo) {
             formData.append('photo', avatar);
         };
-        if (email !== props.user_email) {
-            formData.append("email", email);
-        };
-        if (displayName !== props.user_displayName) {
-            formData.append('display_name', displayName);
-        };
+        formData.append('display_name', displayName);
         try {
             const res = await fetch(api.users.edit(props.token, formData));
             res.json()
             .then((res) => {
-                console.log(res)
-                props.updateUser(res.email, res.displayName, res.photo);
+                if (!res.ok) {
+                    setEditProfileError(Object.values(res)[0]);
+                } else {
+                    props.updateUser(res.display_name, res.photo);
+                }
             })
         } catch (err) {
             setError(err)
         }
-        setFormSubmitted(true);
     };
 
-    async function handleChangePassword() {
-
-    };
-    
-    const handleClose = () => {
-        setOpen(false);
-        window.location.reload();
+    async function handleChangePassword(e) {
+        e.preventDefault();
+        let formData = new FormData();
+        formData.append('old_password', oldpassword);
+        formData.append('new_password1', password1);
+        formData.append('new_password2', password2);
+        try {
+            const res = await fetch(api.users.passwordChange(props.token, formData));
+            res.json()
+            console.log("Can I see the res stqatus here ???", res.ok)
+            if (!res.ok) {
+                console.log("I am entering here", Object.values(res)[0])
+                setPasswordError(Object.values(res)[0]);
+            } else {
+                setPasswordUpdated(true);
+            }
+        } catch (err) {
+            console.log("I am seeing the error...")
+            setError(err)
+        }
     };
 
     const handleUploadClick = event => {
@@ -94,168 +98,215 @@ function Profile(props) {
     return (
         <Container maxWidth="md" maxWidth="lg">
             <div className={classes.paper}>
-        {/* //  enctype="multipart/form-data"> */}
-          {/* { fieldError ? 
-            (
-                <Grid container spacing={3} direction="row" justify="center" alignItems="center">
-                    <Grid item xs={12} align="center">
-                        <Avatar className={classes.profileAvatar} alt={props.user_displayName} src={props.user_photo} />
-                    </Grid>
-                    <Grid item xs={12} md={6} lg={6}>
-                        <Paper className={classes.fixedHeightPaperCenterAlign}>
-                        <TextField
-                            error
-                            helperText="Required"
-                            name="displayName"
-                            variant="outlined"
-                            required
-                            fullWidth
-                            id="displayName"
-                            label="Display Name"
-                            autoFocus
-                            onChange={handleFormFieldChange}
-                        />
-                        <TextField
-                            error
-                            helperText="Required"
-                            variant="outlined"
-                            required
-                            fullWidth
-                            id="email"
-                            label="Email Address"
-                            name="email"
-                            autoComplete="email"
-                            onChange={handleFormFieldChange}
-                        />
-                    </Paper>
-                     </Grid>
-                    <Grid item xs={12} md={6} lg={6}>
-                        <Paper className={classes.fixedHeightPaperCenterAlign}>
-                        <TextField
-                            error
-                            helperText="Required"
-                            variant="outlined"
-                            required
-                            fullWidth
-                            name="password1"
-                            label="Password"
-                            type="password"
-                            id="password1"
-                            onChange={handleFormFieldChange}
-                        />
-                        <TextField
-                            error
-                            helperText="Passwords must match and be longer than 8 characters."
-                            variant="outlined"
-                            required
-                            fullWidth
-                            name="password2"
-                            label="Password"
-                            type="password"
-                            id="password2"
-                            onChange={handleFormFieldChange}
-                        />
-                    </Paper>
-                    </Grid>
-                </Grid>
-            ) : ( */}
-            <form encType="multipart/form-data" className={classes.form} onSubmit={handleEditProfile}>
-                <Grid container direction="row" justify="center" alignItems="center" spacing={2}>
-                    <Grid item xs={12} md={6} lg={6} align="center">
-                        <input
-                            accept="image/*"
-                            className={classes.input}
-                            id="contained-button-file"
-                            type="file"
-                            onChange={handleUploadClick}
-                        />
-                        <label htmlFor="contained-button-file">
-                            <Fab component="span">
-                                <Badge
-                                    overlap="circle"
-                                    anchorOrigin={{vertical: 'top', horizontal: 'right'}}
-                                    badgeContent={<EditIcon /> }
-                                >
-                                    <Avatar className={classes.profileAvatar} alt={props.user_displayName} src={displayPhoto} />
-                                </Badge>
-                            </Fab>
-                        </label>
-                        <Paper className={classes.profilePaperBlocks}>
-                            <TextField
-                                name="displayName"
-                                variant="outlined"
-                                required
-                                fullWidth
-                                id="displayName"
-                                label="Display Name"
-                                autoFocus
-                                value={displayName}
-                                onChange={handleFormFieldChange}
-                                className={classes.textField}
-                            />
-                            <TextField
-                                variant="outlined"
-                                required
-                                fullWidth
-                                id="email"
-                                label="Email Address"
-                                name="email"
-                                autoComplete="email"
-                                value={email}
-                                onChange={handleFormFieldChange}
-                                className={classes.textField}
-                            />
-                            <Button
-                                type="submit"
-                                variant="contained"
-                                color="primary"
-                                className={classes.submit}
-                            >
-                                Save Changes to Profile
-                            </Button>
-                        </Paper>
-                    </Grid>
-                </Grid>
-            </form>
-            <form className={classes.form} noValidate onSubmit={handleChangePassword}>
-                <Grid container direction="row" justify="center" alignItems="center">
-                    <Grid item xs={12} md={6} lg={6} align="center">
-                        <Paper className={classes.profilePaperBlocks}>
-                            <TextField
-                                variant="outlined"
-                                required
-                                fullWidth
-                                name="password1"
-                                label="Password"
-                                type="password"
-                                id="password1"
-                                onChange={handleFormFieldChange}
-                                className={classes.textField}
-                            />
-                            <TextField
-                                variant="outlined"
-                                required
-                                fullWidth
-                                name="password2"
-                                label="Enter Password again"
-                                type="password"
-                                id="password2"
-                                onChange={handleFormFieldChange}
-                                className={classes.textField}
-                            />
-                            <span>* Password must be longer than 8 characters.</span>
-                            <Button
-                                type="submit"
-                                variant="contained"
-                                color="primary"
-                                className={classes.submit}
-                            >
-                                Change Password
-                            </Button>
-                        </Paper>
-                    </Grid>
-                    </Grid>
-                </form>
+            { editProfileError ? 
+                (
+                    <form encType="multipart/form-data" className={classes.form} onSubmit={handleEditProfile}>
+                        <Grid container direction="row" justify="center" alignItems="center" spacing={2}>
+                            <Grid item xs={12} md={6} lg={6} align="center">
+                                <Paper className={classes.profilePaperBlocks}>
+                                    <span className={classes.redText}>* {editProfileError}</span>
+                                    <input
+                                        accept="image/*"
+                                        className={classes.input}
+                                        id="contained-button-file"
+                                        type="file"
+                                        onChange={handleUploadClick}
+                                    />
+                                    <label htmlFor="contained-button-file">
+                                        <Fab component="span" className={classes.marginTopBottom}>
+                                            <Badge
+                                                overlap="circle"
+                                                anchorOrigin={{vertical: 'top', horizontal: 'right'}}
+                                                badgeContent={<EditIcon /> }
+                                            >
+                                                <Avatar className={classes.profileAvatar} alt={props.user_displayName} src={displayPhoto} />
+                                            </Badge>
+                                        </Fab>
+                                    </label>
+                                    <TextField
+                                        name="displayName"
+                                        variant="outlined"
+                                        required
+                                        fullWidth
+                                        id="displayName"
+                                        label="Display Name"
+                                        autoFocus
+                                        value={displayName}
+                                        onChange={handleFormFieldChange}
+                                        className={classes.textField}
+                                        error
+                                    />
+                                    <Button
+                                        type="submit"
+                                        variant="contained"
+                                        color="primary"
+                                        className={classes.submit}
+                                    >
+                                        Save Changes to Profile
+                                    </Button>
+                                </Paper>
+                            </Grid>
+                        </Grid>
+                    </form>
+                ) : ( 
+                    <form encType="multipart/form-data" className={classes.form} onSubmit={handleEditProfile}>
+                        <Grid container direction="row" justify="center" alignItems="center" spacing={2}>
+                            <Grid item xs={12} md={6} lg={6} align="center">
+                                <Paper className={classes.profilePaperBlocks}>
+                                    <input
+                                        accept="image/*"
+                                        className={classes.input}
+                                        id="contained-button-file"
+                                        type="file"
+                                        onChange={handleUploadClick}
+                                    />
+                                    <label htmlFor="contained-button-file">
+                                        <Fab component="span" className={classes.marginTopBottom}>
+                                            <Badge
+                                                overlap="circle"
+                                                anchorOrigin={{vertical: 'top', horizontal: 'right'}}
+                                                badgeContent={<EditIcon /> }
+                                            >
+                                                <Avatar className={classes.profileAvatar} alt={props.user_displayName} src={displayPhoto} />
+                                            </Badge>
+                                        </Fab>
+                                    </label>
+                                    <TextField
+                                        name="displayName"
+                                        variant="outlined"
+                                        required
+                                        fullWidth
+                                        id="displayName"
+                                        label="Display Name"
+                                        autoFocus
+                                        value={displayName}
+                                        onChange={handleFormFieldChange}
+                                        className={classes.textField}
+                                    />
+                                    <Button
+                                        type="submit"
+                                        variant="contained"
+                                        color="primary"
+                                        className={classes.submit}
+                                    >
+                                        Save Changes to Profile
+                                    </Button>
+                                </Paper>
+                            </Grid>
+                        </Grid>
+                    </form>
+                )
+            }
+            { passwordError ?
+                (
+                    <form className={classes.form} noValidate onSubmit={handleChangePassword}>
+                        <Grid container direction="row" justify="center" alignItems="center">
+                            <Grid item xs={12} md={6} lg={6} align="center">
+                                <Paper className={classes.profilePaperBlocks}>
+                                    <span className={classes.redText}>* {passwordError}</span>
+                                    <TextField
+                                        variant="outlined"
+                                        required
+                                        fullWidth
+                                        name="oldpassword"
+                                        label="Current Password"
+                                        type="password"
+                                        id="oldpassword"
+                                        onChange={handleFormFieldChange}
+                                        className={classes.textField}
+                                        error
+                                    />
+                                    <TextField
+                                        variant="outlined"
+                                        required
+                                        fullWidth
+                                        name="password1"
+                                        label="New Password"
+                                        type="password"
+                                        id="password1"
+                                        onChange={handleFormFieldChange}
+                                        className={classes.textField}
+                                        error
+                                    />
+                                    <TextField
+                                        variant="outlined"
+                                        required
+                                        fullWidth
+                                        name="password2"
+                                        label="Enter New Password again"
+                                        type="password"
+                                        id="password2"
+                                        onChange={handleFormFieldChange}
+                                        className={classes.textField}
+                                        error
+                                    />
+                                    <span>* Password must be longer than 8 characters.</span>
+                                    <Button
+                                        type="submit"
+                                        variant="contained"
+                                        color="primary"
+                                        className={classes.submit}
+                                    >
+                                        Change Password
+                                    </Button>
+                                </Paper>
+                            </Grid>
+                        </Grid>
+                    </form>
+                ) : (
+                    <form className={classes.form} noValidate onSubmit={handleChangePassword}>
+                        <Grid container direction="row" justify="center" alignItems="center">
+                            <Grid item xs={12} md={6} lg={6} align="center">
+                                <span>* Password has been updated</span>
+                                <Paper className={classes.profilePaperBlocks}>
+                                    <TextField
+                                        variant="outlined"
+                                        required
+                                        fullWidth
+                                        name="oldpassword"
+                                        label="Current Password"
+                                        type="password"
+                                        id="oldpassword"
+                                        onChange={handleFormFieldChange}
+                                        className={classes.textField}
+                                    />
+                                    <TextField
+                                        variant="outlined"
+                                        required
+                                        fullWidth
+                                        name="password1"
+                                        label="New Password"
+                                        type="password"
+                                        id="password1"
+                                        onChange={handleFormFieldChange}
+                                        className={classes.textField}
+                                    />
+                                    <TextField
+                                        variant="outlined"
+                                        required
+                                        fullWidth
+                                        name="password2"
+                                        label="Enter New Password again"
+                                        type="password"
+                                        id="password2"
+                                        onChange={handleFormFieldChange}
+                                        className={classes.textField}
+                                    />
+                                    <span>* Password must be longer than 8 characters.</span>
+                                    <Button
+                                        type="submit"
+                                        variant="contained"
+                                        color="primary"
+                                        className={classes.submit}
+                                    >
+                                        Change Password
+                                    </Button>
+                                </Paper>
+                            </Grid>
+                        </Grid>
+                    </form>
+                )
+            }
             {/* )
           } */}
             <div>
@@ -269,7 +320,7 @@ function Profile(props) {
 
 const mapDispatchToProps = dispatch => {
     return {
-        updateUser: (email, displayName, photo) => dispatch(actions.updateUser(email, displayName, photo))
+        updateUser: (displayName, photo) => dispatch(actions.updateUser(displayName, photo))
     }
 }
 

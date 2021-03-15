@@ -47,11 +47,10 @@ class TraveldocsWriteSerializer(serializers.ModelSerializer):
         return attrs
     
     def create(self, validated_data):
-        with transaction.atomic():
-            validated_data["owner_id"] = self.context['request'].user
+        validated_data["owner_id"] = self.context['request'].user
 
-            traveldoc = Traveldocs.objects.create(**validated_data)
-            return traveldoc
+        traveldoc = Traveldocs.objects.create(**validated_data)
+        return traveldoc
 
 
 class TraveldocsSerializer(serializers.ModelSerializer):

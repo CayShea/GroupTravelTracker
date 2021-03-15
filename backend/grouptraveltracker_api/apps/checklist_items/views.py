@@ -1,12 +1,11 @@
 from django.shortcuts import render
-from .models import Note
-from .serializers import NotesSerializer, NotesWriteSerializer
+from .models import ChecklistItem
+from .serializers import ChecklistItemsSerializer, ChecklistItemsWriteSerializer
 from rest_framework.views import APIView
 from drf_yasg.utils import swagger_auto_schema
 from ..trips.extensions.views import RWSerializerModelViewSet
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework import status
@@ -15,30 +14,27 @@ import logging
 LOG = logging.getLogger(__name__)
 
 
-class NotesViewSet(RWSerializerModelViewSet):
-    model = Note
-    serializer_class_read = NotesSerializer
-    serializer_class_write = NotesWriteSerializer
+class ChecklistItemViewSet(RWSerializerModelViewSet):
+    model = ChecklistItem
+    serializer_class_read = ChecklistItemsSerializer
+    serializer_class_write = ChecklistItemsWriteSerializer
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        # for now, just making all notes PUBLIC...
-        if self.request.GET.get('trip_id') and self.request.GET.get('event_id'):
-            return (Note.objects.filter(trip__id=self.request.GET.get('trip_id'), event__id=self.request.GET.get('event_id')).order_by('date'))
-        elif self.request.GET.get('trip_id'):
-            return (Note.objects.filter(trip__id=self.request.GET.get('trip_id'), event__isnull=True).order_by('date'))
+        if self.request.GET.get('checklist_id'):
+            return (ChecklistItem.objects.filter(checklist__id=self.request.GET.get('checklist_id')))
         else:
-            return (Note.objects.filter(author_id=self.request.user.id).order_by('date'))
+            return ChecklistItem.objects.all()
 
     @swagger_auto_schema(
-        request_body=NotesWriteSerializer(), responses={status.HTTP_201_CREATED: NotesSerializer()}
+        request_body=ChecklistItemsWriteSerializer(), responses={status.HTTP_201_CREATED: ChecklistItemsSerializer()}
     )
     def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)
 
     @swagger_auto_schema(
-        request_body=NotesWriteSerializer(), responses={status.HTTP_201_CREATED: NotesSerializer()}
+        request_body=ChecklistItemsWriteSerializer(), responses={status.HTTP_201_CREATED: ChecklistItemsSerializer()}
     )
     def update(self, request, *args, **kwargs):
         return super().update(request, *args, **kwargs)
@@ -48,5 +44,5 @@ class NotesViewSet(RWSerializerModelViewSet):
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    def perform_destroy(self, instance: "Notes"):
+    def perform_destroy(self, instance: "ChecklistItems"):
         instance.delete()

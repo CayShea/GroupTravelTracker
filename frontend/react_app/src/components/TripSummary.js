@@ -4,9 +4,7 @@ import { useTheme } from '@material-ui/core/styles';
 import Title from './Title';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import ListItemText from '@material-ui/core/ListItemText';
 
@@ -20,6 +18,7 @@ export default function TripSummary(props) {
   const tripDetails = {
     "Location": props.trip.location ? props.trip.location.title : '--',
     "Dates": props.trip.startdate ? `${props.trip.startdate} to ${props.trip.enddate}` : '--',
+    "Travellers": props.tripMembers,
     "Budget": props.trip.budget ? props.trip.budget : '--',
     "Summary": props.trip.summary ? props.trip.summary : '--',
     "Classification": props.trip.classification,

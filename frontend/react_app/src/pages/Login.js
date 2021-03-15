@@ -14,6 +14,7 @@ import { connect } from 'react-redux';
 import { useHistory, useLocation } from "react-router-dom";
 
 import * as actions from '../store/authActions';
+import Footer from "../components/Footer";
 import useStyles from '../style';
 
 
@@ -146,6 +147,7 @@ function Login(props) {
           </Grid>
         </form>
       </div>
+      <Footer />
     </Container>
   );
 }

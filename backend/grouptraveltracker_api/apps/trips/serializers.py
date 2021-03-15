@@ -7,6 +7,7 @@ from ..trip_members.models import TripMember
 from ..location.models import Location
 from ..location.serializers import InlineLocationSerializer
 from ..traveldocs.serializers import InlineDocsSerializer
+from ..checklist.serializers import InlineChecklistsSerializer
 import logging
 
 LOG = logging.getLogger(__name__)
@@ -49,6 +50,7 @@ class TripSerializer(serializers.ModelSerializer):
     members = InlineTripMemberSerializer(many=True, read_only=True)
     events = InlineEventSerializer(many=True, read_only=True)
     documents = InlineDocsSerializer(many=True, read_only=True)
+    checklists = InlineChecklistsSerializer(many=True, read_only=True)
     location = InlineLocationSerializer(required=False, many=False, read_only=True)
     current_user = serializers.SerializerMethodField('_user')
     
@@ -59,7 +61,7 @@ class TripSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Trip
-        fields = ("name", "id", "startdate", "enddate", "location", "summary", "budget", "classification", "owner", "members", "events", "documents", "current_user")
+        fields = ("name", "id", "startdate", "enddate", "location", "summary", "budget", "classification", "owner", "members", "events", "documents", "checklists", "current_user",)
 
 
 class TripWriteSerializer(serializers.ModelSerializer):

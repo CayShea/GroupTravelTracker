@@ -311,18 +311,18 @@ export default function CreateTrip(props) {
                         <FormControl fullWidth className={classes.formControl}>
                             <InputLabel htmlFor="classification">Classification</InputLabel>
                             <Select
-                            native
-                            value={values.classification}
-                            onChange={handleChange('classification')}
-                            inputProps={{
-                                name: 'classification',
-                                id: 'classification',
-                            }}
+                                native
+                                value={values.classification}
+                                onChange={handleChange('classification')}
+                                inputProps={{
+                                    name: 'classification',
+                                    id: 'classification',
+                                }}
                             >
-                            <option aria-label="None" value="{'none'}" />
-                            <option value={'work'}>Business</option>
-                            <option value={'pleasure'}>Pleasure</option>
-                            <option value={'both'}>Both</option>
+                                <option aria-label="None" value="{'none'}" />
+                                <option value={'work'}>Business</option>
+                                <option value={'pleasure'}>Pleasure</option>
+                                <option value={'both'}>Both</option>
                             </Select>
                         </FormControl>
                     </Grid>
@@ -336,7 +336,7 @@ export default function CreateTrip(props) {
                 >
                     Cancel
                 </Button>
-                <Button 
+                <Button
                     onClick={handleSubmit}
                     variant="contained"
                     color="primary"

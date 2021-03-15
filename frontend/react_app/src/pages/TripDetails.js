@@ -66,6 +66,13 @@ export default function TripDetails(props) {
     const API_KEY = `${process.env.REACT_APP_geocode}`;
     let { id } = useParams();
     const [ tripDetails, setTripDetails ] = useState({});
+    const [ tripNotes, setTripNotes ] = useState({});
+    const [ tripMembers, setTripMembers ] = useState([]);
+    const [ tripChecklist, setTripChecklist ] = useState({});
+    const [ doneFetchingEvents, setdoneFetchingEvents ] = useState(false);
+    const [ doneFetchingChecklist, setdoneFetchingChecklist ] = useState(false);
+    const [ doneFetchingNotes, setdoneFetchingNotes ] = useState(false);
+    const [ doneFetchingTrip, setdoneFetchingTrip ] = useState(false);
     const [ events, setEvents ] = useState([]);
     const [ eventsWithLocation, setEventsWithLocation ] = useState([]);
     const  [ hasError, setErrors ] =  useState(false);
@@ -101,10 +108,15 @@ export default function TripDetails(props) {
       const res = await fetch(api.trips.detail(props.token, id));
       res.json()
       .then(res => {
-        setTripDetails(res);   
+        const members = [];
+        res.members.forEach((mem) => {
+          members.push(`${mem.display_name}, `);
+        })
         setDefaultStartEventTime(new Date(new Date(res.startdate).toLocaleString()).toISOString().slice(0, -8));
-        setDefaultEndEventTime(new Date(new Date(res.enddate).toLocaleString()).toISOString().slice(0, -8))
-      })
+        setDefaultEndEventTime(new Date(new Date(res.enddate).toLocaleString()).toISOString().slice(0, -8));
+        setTripMembers(members);
+        setTripDetails(res);
+      }).then(() => { setdoneFetchingTrip(true) })
       .catch(err => setErrors(err));
     };
     useEffect(() => {
@@ -122,11 +134,36 @@ export default function TripDetails(props) {
         setEventsWithLocation(filteredEvents);
         setEvents(res);
         formatItinerary(res);
-      })
+      }).then(() => { setdoneFetchingEvents(true) })
       .catch(err => setErrors(err));
     };
     useEffect(() => {
       fetchEvents();
+    }, []);
+
+    async function fetchNotes() {
+      const res = await fetch(api.notes.list(props.token, id));
+      res.json()
+      .then(res => {
+        setTripNotes(res);
+        setdoneFetchingNotes(true);
+      })
+      .catch(err => setErrors(err));
+    };
+    useEffect(() => {
+      fetchNotes();
+    }, []);
+
+    async function fetchChecklist() {
+      const res = await fetch(api.checklist.list(props.token, id));
+      res.json()
+      .then(res => {
+        setTripChecklist(res);
+      }).then(() => { setdoneFetchingChecklist(true) })
+      .catch(err => setErrors(err));
+    };
+    useEffect(() => {
+      fetchChecklist();
     }, []);
 
     const selectCalendar = () => {
@@ -188,8 +225,10 @@ export default function TripDetails(props) {
         default:
           return (
             <Dashboard 
-              tripDetails={tripDetails} 
+              tripDetails={tripDetails}
+              tripMembers={tripMembers}
               events={events}
+              tripChecklist={tripChecklist}
               withinRangeOfToday={withinRangeOfToday}
               todayEventsArray={todayEventsArray}
               firstEventIndex={firstEventIndex}
@@ -197,35 +236,47 @@ export default function TripDetails(props) {
               selectDocumentsView={selectDocumentsView}
               refetchTrip={fetchTrip}
               refetchEvents={fetchEvents}
+              refetchChecklists={fetchChecklist}
               token={props.token}
               defaultStartEventTime={defaultStartEventTime}
               defaultEndEventTime={defaultEndEventTime}
+              user_displayName={props.user_displayName}
             ></Dashboard>
           );
       }
     }
 
+
     return (
       <div className={classes.secondaryRoot}>
-        <SideBar 
-          tripDetails={tripDetails}
-          events={events}
-          selectDashboard={selectDashboard}
-          selectCalendar={selectCalendar}
-          selectMap={selectMap}
-          selectItinerary={selectItinerary}
-          selectDocumentsView={selectDocumentsView}
-          isDashboardView={true} 
-          fetchData={fetchTrip}
-          componentShowing={componentShowing}
-          token={props.token}
-        />
+        { doneFetchingTrip && doneFetchingEvents && doneFetchingNotes && doneFetchingChecklist ?
+          (
+            <SideBar 
+              tripDetails={tripDetails}
+              events={events}
+              tripNotes={tripNotes}
+              selectDashboard={selectDashboard}
+              selectCalendar={selectCalendar}
+              selectMap={selectMap}
+              selectItinerary={selectItinerary}
+              selectDocumentsView={selectDocumentsView}
+              isDashboardView={true} 
+              fetchData={fetchTrip}
+              refetchNotes={fetchNotes}
+              componentShowing={componentShowing}
+              token={props.token}
+              user_displayName={props.user_displayName}
+            />
+          ): (
+            <div></div>
+          )
+        }
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
-          { firstEventIndex !== null ? (
+          { doneFetchingTrip && doneFetchingEvents && doneFetchingNotes && doneFetchingChecklist ? (
             <RenderSwitch value={componentShowing} token={props.token}/>
           ) : (
-            <div></div>
+            <div>Loading...</div>
           )}
         </main>
       </div>

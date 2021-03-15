@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from '@material-ui/core/AppBar';
@@ -22,6 +22,7 @@ import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 
 import TripForm from '../components/TripForm';
+import NotesPopup from '../components/NotesPopup';
 
 
 const drawerWidth = 240;
@@ -101,8 +102,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SideBar(props){
     const classes = useStyles();
-
     const [open, setOpen] = React.useState(true);
+
     const handleDrawerOpen = () => {
       setOpen(true);
     };
@@ -114,7 +115,9 @@ export default function SideBar(props){
         <div>  
             <CssBaseline />
             <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
+            { props.tripDetails && props.tripDetails.name ? (
               <Toolbar className={classes.toolbar}>
+                {/* <Grid container direction="row" justifyContent="center" alignContent="center" justify="center"> */}
                   <IconButton
                     edge="start"
                     color="inherit"
@@ -127,7 +130,14 @@ export default function SideBar(props){
                   <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
                     {props.tripDetails.name}
                   </Typography>
-                  { 
+                  <NotesPopup
+                    notes={props.tripNotes} 
+                    token={props.token} 
+                    tripId={props.tripDetails.id} 
+                    user_displayName={props.user_displayName}
+                    refetchNotes={props.refetchNotes}
+                  />
+                  {
                     props.isDashboardView ?
                     (
                       <div className={classes.toolbarIcon}>
@@ -144,6 +154,9 @@ export default function SideBar(props){
                     ) : <div></div>
                   }
               </Toolbar>
+              ) : (
+                <div></div>
+              )}
             </AppBar>
             <Drawer
                 variant="permanent"

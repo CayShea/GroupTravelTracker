@@ -139,12 +139,12 @@ export const authCheckState = () => {
     }
 }
 
-export const updateUser = (email, displayName, photo) => {
+export const updateUser = (displayName, photo) => {
     return dispatch => {
         const token = localStorage.getItem('token');
-        localStorage.setItem('user_email', email)
+        const user_email = localStorage.getItem('user_email');
         localStorage.setItem('user_displayName', displayName)
         localStorage.setItem('user_photo', photo);
-        dispatch(authSuccess(token, email, displayName, photo))
+        dispatch(authSuccess(token, displayName, user_email, photo))
     }
 }

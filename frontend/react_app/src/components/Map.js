@@ -82,8 +82,6 @@ const MapScreen = (props) => {
                         }}
                         // onClick={() => {alert("Direction to here")}}
                       />
-                      // add polyline?...
-                      // for react native display, add Directions
                   ))) : (<div></div>)
                 }
                 {selectedCenter && (

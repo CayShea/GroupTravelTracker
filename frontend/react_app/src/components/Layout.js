@@ -1,6 +1,5 @@
 import React from 'react';
-import Header from "./Header"
-import Footer from "./Footer"
+import Header from "./Header";
 import CssBaseline from '@material-ui/core/CssBaseline';
 
 
@@ -12,7 +11,6 @@ function Layout(props) {
                 <div>
                     {props.children}
                 </div>
-            <Footer />
         </React.Fragment>
     )
 }
