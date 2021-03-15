@@ -24,7 +24,8 @@ const mapStateToProps = (state) => {
     token: state.auth.token,
     user_displayName: state.auth.user_displayName,
     user_email: state.auth.user_email,
-    user_photo: state.auth.user_photo
+    user_photo: state.auth.user_photo,
+    res: state.auth.res
   }
 }
 

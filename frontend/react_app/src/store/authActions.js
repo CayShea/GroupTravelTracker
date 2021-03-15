@@ -33,6 +33,13 @@ export const authFail = error => {
     }
 }
 
+export const authSignupSuccess = res => {
+    return {
+        type: actionTypes.AUTH_SUCCESS_SIGNUP,
+        res: res
+    }
+}
+
 export const authLogout = () => {
     const token = localStorage.getItem('token');
     if (token === undefined){
@@ -106,15 +113,11 @@ export const authSignup = (email, password1, password2, displayName) => {
             display_name: displayName
         })
         .then(res => {
-            const token = res.data.key;
-            const expirationDate = new Date(new Date().getTime() + SESSION_DURATION );
-            localStorage.setItem('token', token);
-            localStorage.setItem('expirationDate', expirationDate);
-            dispatch(authSuccess(token));
-            dispatch(authCheckTimeout(SESSION_DURATION));
+            dispatch(authSignupSuccess(res.data.detail))
         })
         .catch(err => {
-            dispatch(authFail(err))
+            console.log("THE ERROR in SIGNUP >>>", Object.values(err.response.data).toString());
+            dispatch(authFail(Object.values(err.response.data).toString()));
         });
     }
 }

@@ -46,6 +46,14 @@ const authSuccessReducer = (state, action) => {
     });
 }
 
+const authSuccessSignupReducer = (state, action) => {
+    return updateObject(state, {
+        error: null,
+        loading: false,
+        res: action.res,
+    });
+}
+
 const authFailReducer = (state, action) => {
     return updateObject(state, {
         error: action.error,
@@ -70,6 +78,7 @@ const Reducer = (state=initialState, action) => {
     switch (action.type) {
         case actionTypes.AUTH_START: return authStartReducer(state, action);
         case actionTypes.AUTH_SUCCESS: return authSuccessReducer(state, action);
+        case actionTypes.AUTH_SUCCESS_SIGNUP: return authSuccessSignupReducer(state, action);
         case actionTypes.AUTH_FAIL: return authFailReducer(state, action);
         case actionTypes.AUTH_LOGOUT: return authLogoutReducer(state, action);
         default:

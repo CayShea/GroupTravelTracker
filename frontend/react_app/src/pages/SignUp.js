@@ -23,7 +23,7 @@ function SignUp(props) {
   const [ password2, setPassword2 ] = useState('');
   const [ displayName, setDisplayName ] = useState('');
   const [ formSubmitted, setFormSubmitted ] = useState(false);
-  const [ fieldError, setFieldError ] = useState(false);
+  const [ fieldError, setFieldError ] = useState('');
   const [ open, setOpen ] = useState(false);
 
   let history = useHistory();
@@ -38,9 +38,12 @@ function SignUp(props) {
 
   useEffect(() => {
     if (props.error) {
-      setFieldError(true);
+      setFieldError(props.error);
       setFormSubmitted(false);
-    };
+    }
+    if (props.res) {
+      setFormSubmitted(true);
+    }
   });
 
   const handleFormFieldChange = (event) => {
@@ -63,7 +66,6 @@ function SignUp(props) {
   // props.onAuth(formData);
 
   props.onAuth(email, password1, password2, displayName);
-    setFormSubmitted(true);
   };
 
  const handleClose = () => {
@@ -86,6 +88,9 @@ function SignUp(props) {
           { fieldError ? 
             (
               <Grid container spacing={2}>
+                <Grid item xs={12} style={{color: 'red', marginBottom: '10px'}}>
+                  {fieldError}
+                </Grid>
                 <Grid item xs={12}>
                   <TextField
                     error
@@ -131,7 +136,6 @@ function SignUp(props) {
                 <Grid item xs={12}>
                   <TextField
                     error
-                    helperText="Passwords must match and be longer than 8 characters."
                     variant="outlined"
                     required
                     fullWidth
