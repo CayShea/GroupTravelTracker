@@ -15,13 +15,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// const myTheme = {
-//   'month.schedule.height': '24px',
-//   'month.day.color': 'rgba(51, 51, 51, 0.4)',
-//   'common.border': '1px solid #e5e5e5',
-//   'common.day.height': "5px"
-// };
-
 const myTheme = {
     // month header 'dayname'
     'month.dayname.height': '42px',
@@ -49,7 +42,6 @@ const myTheme = {
 
 const CalendarOverview = (props) => {
   const [date, changeDate] = useState(new Date());
-  const classes = useStyles();
 
   return (
     <>

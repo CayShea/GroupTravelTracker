@@ -1,5 +1,4 @@
 import React from 'react';
-import { useTheme } from '@material-ui/core/styles';
 // import { LineChart, Line, XAxis, YAxis, Label, ResponsiveContainer } from 'recharts';
 import Title from './Title';
 import List from '@material-ui/core/List';
@@ -12,7 +11,6 @@ import useStyles from '../style';
 
 
 export default function TripSummary(props) {
-  const theme = useTheme();
   const classes = useStyles();
 
   const tripDetails = {

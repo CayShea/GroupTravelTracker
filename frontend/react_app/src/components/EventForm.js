@@ -45,7 +45,7 @@ export default function EventForm (props) {
     
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (newEvent['title'] == "") {
+        if (newEvent['title'] === "") {
             setNameError(true);
         } else {
             createOrEditEvent();

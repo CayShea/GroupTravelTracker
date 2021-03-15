@@ -9,7 +9,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import { connect } from 'react-redux';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 import * as actions from '../store/authActions';
 import Footer from "../components/Footer";
@@ -27,7 +27,6 @@ function SignUp(props) {
   const [ fieldError, setFieldError ] = useState(false);
   const [ open, setOpen ] = useState(false);
 
-  let history = useHistory();
   let location = useLocation();
   let { from } = location.state || { from: { pathname: "/" } }
 

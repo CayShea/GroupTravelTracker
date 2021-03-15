@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import NoteAddIcon from '@material-ui/icons/NoteAdd';
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
@@ -16,7 +14,6 @@ import Button from '@material-ui/core/Button';
 
 import useStyles from '../style';
 import api from '../api';
-import NoteAdd from '@material-ui/icons/NoteAdd';
 
 
 function Note (props) {
@@ -124,7 +121,7 @@ export default function NotesPopup (props) {
       try {
         const res = await fetch(api.notes.create(props.token, newNote, props.tripId));
         res.json()
-        .then((res) => {
+        .then(() => {
             props.refetchNotes();
         })
       } catch (err) {
